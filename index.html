@@ -33,47 +33,47 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 .link-warning{font-size:.75rem;color:#cc8888;margin-top:10px}
 
 /* INTRO */
-.intro-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(2rem,8vw,4rem);text-shadow:0 0 20px rgba(255,215,0,.5);text-align:center;margin-bottom:10px;animation:glow 2s ease-in-out infinite alternate}
+.intro-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(2rem,8vw,4rem);text-shadow:0 0 20px rgba(255,215,0,.5);text-align:center;margin-bottom:10px;animation:glow 2s ease-in-out infinite alternate;white-space:nowrap}
 @keyframes glow{from{text-shadow:0 0 20px rgba(255,215,0,.5)}to{text-shadow:0 0 40px rgba(255,215,0,.8),0 0 80px rgba(255,215,0,.3)}}
-.intro-subtitle{font-size:clamp(.9rem,3vw,1.2rem);color:#ffaaaa;margin-bottom:40px;text-align:center;opacity:.8}
+.intro-subtitle{font-size:clamp(.9rem,3vw,1.2rem);color:#ffaaaa;margin-bottom:40px;text-align:center;opacity:.8;white-space:nowrap}
 .intro-envelope{font-size:100px;animation:bounce 2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(255,0,0,.3))}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-.intro-hint{margin-top:30px;font-size:.9rem;color:#cc8888;animation:fade 2s ease-in-out infinite}
+.intro-hint{margin-top:30px;font-size:.9rem;color:#cc8888;animation:fade 2s ease-in-out infinite;white-space:nowrap}
 @keyframes fade{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* PUZZLE */
 #puzzle-screen{padding:10px 15px}
-.puzzle-header{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,5vw,1.8rem);margin-bottom:8px;text-align:center}
+.puzzle-header{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,5vw,1.8rem);margin-bottom:8px;text-align:center;white-space:nowrap}
 .puzzle-wrapper{position:relative;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:10px}
 .puzzle-board{position:relative;border:3px solid #ffd700;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,.2);background:rgba(0,0,0,.3);overflow:visible}
 .puzzle-piece-cv{position:absolute;cursor:pointer;z-index:1;transition:transform .15s}
 .puzzle-piece-cv.selected{z-index:5;transform:scale(1.08);filter:drop-shadow(0 0 15px rgba(255,215,0,.9))!important}
 .puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important;transform:none}
 .puzzle-ref{border:2px solid #ffd700;border-radius:6px;opacity:.7;object-fit:contain;max-height:70px}
-.puzzle-progress{margin-top:8px;font-size:.85rem;color:#ffaaaa}
+.puzzle-progress{margin-top:8px;font-size:.85rem;color:#ffaaaa;white-space:nowrap}
 .puzzle-progress-bar{height:6px;background:#333;border-radius:3px;margin-top:6px;overflow:hidden}
 .puzzle-progress-fill{height:100%;background:linear-gradient(90deg,#ff4444,#ffd700);border-radius:3px;transition:width .3s;width:0%}
-.btn-shuffle{margin-top:12px;padding:10px 30px;background:linear-gradient(135deg,#cc0000,#aa0000);color:#ffd700;border:2px solid #ffd700;border-radius:30px;font-family:'Noto Serif TC',serif;font-size:1rem;cursor:pointer}
+.btn-shuffle{margin-top:12px;padding:10px 30px;background:linear-gradient(135deg,#cc0000,#aa0000);color:#ffd700;border:2px solid #ffd700;border-radius:30px;font-family:'Noto Serif TC',serif;font-size:1rem;cursor:pointer;white-space:nowrap}
 .piece-burst{position:fixed;pointer-events:none;z-index:200}
 .swap-anim{transition:left .3s ease,top .3s ease}
 
 /* SCRATCH */
-.congrats-text{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.5rem,7vw,2.5rem);text-shadow:0 0 30px rgba(255,215,0,.6);text-align:center;margin-bottom:8px;animation:glow 2s ease-in-out infinite alternate}
-.congrats-sub{font-size:clamp(.9rem,3vw,1.1rem);color:#ffaaaa;margin-bottom:25px;text-align:center}
+.congrats-text{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.5rem,7vw,2.5rem);text-shadow:0 0 30px rgba(255,215,0,.6);text-align:center;margin-bottom:8px;animation:glow 2s ease-in-out infinite alternate;white-space:nowrap}
+.congrats-sub{font-size:clamp(.9rem,3vw,1.1rem);color:#ffaaaa;margin-bottom:25px;text-align:center;white-space:nowrap}
 .scratch-wrapper{position:relative;width:min(80vw,320px);height:min(50vw,200px);border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(255,0,0,.3);border:3px solid #ffd700}
 .scratch-bg{position:absolute;inset:0;background:linear-gradient(135deg,#fff5e6,#fff0d0);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .prize-icon{font-size:50px;margin-bottom:8px}
 .prize-text{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1rem,4vw,1.4rem);color:#cc0000;text-align:center;font-weight:900}
 .scratch-canvas{position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;touch-action:none}
-.scratch-hint{margin-top:20px;font-size:.9rem;color:#ffaaaa;animation:fade 2s ease-in-out infinite}
+.scratch-hint{margin-top:20px;font-size:.9rem;color:#ffaaaa;animation:fade 2s ease-in-out infinite;white-space:nowrap}
 
 /* PRIZE */
 .prize-reveal{text-align:center;animation:pa .8s ease-out}
 @keyframes pa{from{opacity:0;transform:scale(.5) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .prize-big-icon{font-size:80px;animation:bounce 1.5s ease-in-out infinite}
-.prize-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.8rem,8vw,3rem);text-shadow:0 0 30px rgba(255,215,0,.6);margin:15px 0 8px}
-.prize-desc{font-size:clamp(.9rem,3vw,1.1rem);color:#ffcccc;margin-bottom:25px}
-.btn-claim{padding:16px 50px;background:linear-gradient(135deg,#ff1a1a,#cc0000);color:#ffd700;border:3px solid #ffd700;border-radius:40px;font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,4vw,1.5rem);cursor:pointer;box-shadow:0 4px 20px rgba(255,0,0,.4);animation:pulse 2s ease-in-out infinite;position:relative;overflow:hidden}
+.prize-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.8rem,8vw,3rem);text-shadow:0 0 30px rgba(255,215,0,.6);margin:15px 0 8px;white-space:nowrap}
+.prize-desc{font-size:clamp(.9rem,3vw,1.1rem);color:#ffcccc;margin-bottom:25px;white-space:nowrap}
+.btn-claim{padding:16px 50px;background:linear-gradient(135deg,#ff1a1a,#cc0000);color:#ffd700;border:3px solid #ffd700;border-radius:40px;font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,4vw,1.5rem);cursor:pointer;box-shadow:0 4px 20px rgba(255,0,0,.4);animation:pulse 2s ease-in-out infinite;position:relative;overflow:hidden;white-space:nowrap}
 @keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(255,0,0,.4)}50%{box-shadow:0 4px 30px rgba(255,0,0,.6),0 0 60px rgba(255,215,0,.4)}}
 .btn-claim::after{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2.5s infinite}
 @keyframes shimmer{0%{left:-60%}100%{left:120%}}
@@ -101,7 +101,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 <!-- CREATOR -->
 <div id="creator-screen" class="screen">
   <div class="creator-card">
-    <div class="creator-title">✨ 製作新年驚喜</div>
+    <div class="creator-title">🧧 跟JOY一起過新年！</div>
     <div class="creator-subtitle">三步驟做好，傳連結給朋友就能玩</div>
     <div class="form-group">
       <label class="form-label">📸 上傳拼圖照片</label>
@@ -109,8 +109,6 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       <input type="file" accept="image/*" class="form-file-input" id="photo-input">
       <img class="photo-preview" id="photo-preview">
     </div>
-    <div class="form-group"><label class="form-label">🔑 序號 / 金額 / 備註</label><input type="text" class="form-input" id="code-input" placeholder="例：紅包$500、序號、轉帳備註"></div>
-    <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="恭喜發財，大吉大利" value="恭喜發財，大吉大利"></div>
     <div class="form-group"><label class="form-label">🎁 禮物類型</label>
       <select class="form-select" id="gift-type-select">
         <option value="linepay" selected>💰 LINE 轉帳紅包</option>
@@ -118,6 +116,19 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
         <option value="custom">🎁 自訂禮物</option>
       </select>
     </div>
+    <div id="voucher-fields">
+      <div class="form-group"><label class="form-label">💰 金額</label><input type="text" class="form-input" id="amount-input" placeholder="例：$500"></div>
+      <div class="form-group"><label class="form-label">👤 你的名字</label><input type="text" class="form-input" id="sender-input" placeholder="例：Joy"></div>
+    </div>
+    <div id="code-field" style="display:none">
+      <div class="form-group"><label class="form-label">🔑 序號 / 內容</label><input type="text" class="form-input" id="code-input" placeholder="禮物卡序號或自訂內容"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">🎨 自訂兌換券圖片 <span style="font-size:.75rem;color:#aa8888">（選填，不傳會自動產生）</span></label>
+      <label class="form-file-label" id="voucher-label" style="padding:15px"><span id="voucher-label-text">📎 上傳自訂兌換券圖片</span></label>
+      <input type="file" accept="image/*" class="form-file-input" id="voucher-input">
+    </div>
+    <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="恭喜發財，JOY更發財" value="恭喜發財，JOY更發財"></div>
     <div class="form-group"><label class="form-label">🧩 拼圖難度</label>
       <select class="form-select" id="difficulty-select">
         <option value="4" selected>🟢 簡單</option><option value="5">🟡 中等</option><option value="6">🔴 困難</option>
@@ -150,7 +161,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       <img class="puzzle-ref" id="puzzle-ref" alt="參考圖">
     </div>
   </div>
-  <div class="puzzle-hint" style="margin-top:6px;font-size:.8rem;color:#cc8888;text-align:center">👆 點一片選中，再點另一片交換位置</div>
+  <div class="puzzle-hint" style="margin-top:6px;font-size:.8rem;color:#cc8888;text-align:center;white-space:nowrap">👆 點一片選中，再點另一片交換位置</div>
   <div class="puzzle-progress">已完成 <span id="progress-count">0</span> / <span id="progress-total">16</span> 片</div>
   <div class="puzzle-progress-bar" id="progress-bar"><div class="puzzle-progress-fill" id="progress-fill"></div></div>
   <button class="btn-shuffle" id="btn-shuffle">🔀 重新打亂</button>
@@ -172,9 +183,13 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
   <div class="prize-reveal">
     <div class="prize-big-icon">🎊</div>
     <div class="prize-title">恭喜中獎！</div>
-    <div class="prize-desc">🧧 恭喜發財！紅包拿來！</div>
-    <button class="btn-claim" id="btn-claim">🍔 領取禮物卡</button>
-    <div class="manual-code">如果沒有自動跳轉，請手動複製序號：<br><span id="manual-code-display"></span></div>
+    <div class="prize-desc">🧧 截圖保存，找送禮人兌換！</div>
+    <canvas id="voucher-canvas" style="border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:90vw"></canvas>
+    <img id="voucher-custom-img" style="display:none;border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:90vw;max-height:50vh">
+    <div style="margin-top:15px">
+      <button class="btn-claim" id="btn-claim">📱 截圖保存兌換券</button>
+    </div>
+    <div class="manual-code" id="manual-code-area">兌換碼：<span id="manual-code-display"></span></div>
     <button class="btn-make-own" id="btn-make-own">✨ 我也要做一個送朋友</button>
   </div>
 </div>
@@ -187,7 +202,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 // ===== CONFIG =====
 const IMGBB_API_KEY='f3b38ce5bec9cb00a5ee4c5bf768ad2a';
 const GIFT_TYPES={linepay:{emoji:'💰',label:'恭喜獲得<br>新年紅包！🧧',btn:'💰 打開 LINE 領取紅包',url:'https://line.me/R/'},giftcard:{emoji:'🎫',label:'恭喜獲得<br>禮物卡！🎉',btn:'🎫 複製序號領取禮物卡',url:''},custom:{emoji:'🎁',label:'恭喜獲得<br>神秘禮物！',btn:'🎁 領取禮物',url:''}};
-let CONFIG={puzzleImage:'',giftCode:'',greeting:'恭喜發財，大吉大利',giftType:'linepay',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000};
+let CONFIG={puzzleImage:'',giftCode:'',greeting:'恭喜發財，JOY更發財',giftType:'linepay',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000,amount:'',sender:'',voucherImg:''};
 
 // ===== AUDIO =====
 let audioCtx=null;
@@ -244,26 +259,45 @@ async function uploadToImgBB(blob){
   });
 }
 
-function buildUrl(imageUrl,code,greeting,type,size){const p=new URLSearchParams();p.set('p',imageUrl);p.set('c',code);p.set('g',greeting);p.set('t',type);p.set('s',size);return location.origin+location.pathname+'?'+p.toString();}
-function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'恭喜發財，大吉大利',giftType:p.get('t')||'linepay',puzzleSize:parseInt(p.get('s'))||4};}
+function buildUrl(imageUrl,code,greeting,type,size,amount,sender,voucherImg){const p=new URLSearchParams();p.set('p',imageUrl);if(code)p.set('c',code);p.set('g',greeting);p.set('t',type);p.set('s',size);if(amount)p.set('a',amount);if(sender)p.set('n',sender);if(voucherImg)p.set('v',voucherImg);return location.origin+location.pathname+'?'+p.toString();}
+function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'恭喜發財，JOY更發財',giftType:p.get('t')||'linepay',puzzleSize:parseInt(p.get('s'))||4,amount:p.get('a')||'',sender:p.get('n')||'',voucherImg:p.get('v')||''};}
 
 // ===== CREATOR =====
-let selectedFile=null;
+let selectedFile=null,selectedVoucherFile=null;
 document.getElementById('file-label').addEventListener('click',()=>document.getElementById('photo-input').click());
 document.getElementById('photo-input').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;selectedFile=f;document.getElementById('file-label').classList.add('has-file');document.getElementById('file-label-text').textContent='✅ '+f.name;const rd=new FileReader();rd.onload=ev=>{const p=document.getElementById('photo-preview');p.src=ev.target.result;p.style.display='block';};rd.readAsDataURL(f);});
 
+// Voucher upload
+document.getElementById('voucher-label').addEventListener('click',()=>document.getElementById('voucher-input').click());
+document.getElementById('voucher-input').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;selectedVoucherFile=f;document.getElementById('voucher-label').classList.add('has-file');document.getElementById('voucher-label-text').textContent='✅ '+f.name;});
+
+// Toggle fields based on gift type
+document.getElementById('gift-type-select').addEventListener('change',e=>{
+  const v=e.target.value;
+  document.getElementById('voucher-fields').style.display=(v==='linepay')?'':'none';
+  document.getElementById('code-field').style.display=(v!=='linepay')?'':'none';
+});
+
 document.getElementById('btn-generate').addEventListener('click',async()=>{
   if(!selectedFile){showToast('⚠️ 請先上傳照片');return;}
-  const code=document.getElementById('code-input').value.trim();
-  if(!code){showToast('⚠️ 請輸入序號或備註');return;}
-  const greeting=document.getElementById('greeting-input').value.trim()||'恭喜發財，大吉大利';
   const type=document.getElementById('gift-type-select').value;
+  const amount=document.getElementById('amount-input')?.value.trim()||'';
+  const sender=document.getElementById('sender-input')?.value.trim()||'';
+  const code=document.getElementById('code-input')?.value.trim()||'';
+  if(type==='linepay'&&!amount){showToast('⚠️ 請輸入金額');return;}
+  if(type!=='linepay'&&!code){showToast('⚠️ 請輸入序號或內容');return;}
+  const greeting=document.getElementById('greeting-input').value.trim()||'恭喜發財，JOY更發財';
   const size=parseInt(document.getElementById('difficulty-select').value);
   document.getElementById('loading-overlay').classList.add('show');
   try{
     const blob=await compressImage(selectedFile);
     const imageUrl=await uploadToImgBB(blob);
-    const url=buildUrl(imageUrl,code,greeting,type,size);
+    let voucherUrl='';
+    if(selectedVoucherFile){
+      const vBlob=await compressImage(selectedVoucherFile);
+      voucherUrl=await uploadToImgBB(vBlob);
+    }
+    const url=buildUrl(imageUrl,code,greeting,type,size,amount,sender,voucherUrl);
     document.getElementById('link-display').textContent=url;
     document.getElementById('link-result').style.display='block';
     document.querySelector('.link-warning').textContent='📸 照片會在 7 天後自動刪除，請確保對方在期限內打開';
@@ -277,7 +311,83 @@ document.getElementById('btn-preview').addEventListener('click',()=>window.open(
 
 // ===== INIT =====
 function init(){const d=readUrlParams();if(d){CONFIG={...CONFIG,...d};setupPlayer();return;}showScreen('creator-screen');}
-function setupPlayer(){const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;document.getElementById('greeting-text').textContent=CONFIG.greeting;document.getElementById('prize-emoji').textContent=g.emoji;document.getElementById('prize-label').innerHTML=g.label;document.getElementById('btn-claim').textContent=g.btn;document.getElementById('manual-code-display').textContent=CONFIG.giftCode;showScreen('intro-screen');}
+function setupPlayer(){
+  const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;
+  document.getElementById('greeting-text').textContent=CONFIG.greeting;
+  document.getElementById('prize-emoji').textContent=g.emoji;
+  document.getElementById('prize-label').innerHTML=g.label;
+  // Setup prize screen
+  if(CONFIG.voucherImg){
+    // Custom voucher image
+    document.getElementById('voucher-canvas').style.display='none';
+    const img=document.getElementById('voucher-custom-img');
+    img.src=CONFIG.voucherImg;img.style.display='block';
+    document.getElementById('btn-claim').textContent='📱 截圖保存兌換券';
+  } else if(CONFIG.amount){
+    // Auto-generate voucher
+    document.getElementById('voucher-custom-img').style.display='none';
+    drawVoucher(CONFIG.amount,CONFIG.sender,CONFIG.greeting);
+    document.getElementById('btn-claim').textContent='📱 截圖保存兌換券';
+  } else {
+    // Gift card / custom mode
+    document.getElementById('voucher-canvas').style.display='none';
+    document.getElementById('voucher-custom-img').style.display='none';
+    document.getElementById('btn-claim').textContent=g.btn;
+  }
+  if(CONFIG.giftCode){
+    document.getElementById('manual-code-display').textContent=CONFIG.giftCode;
+    document.getElementById('manual-code-area').style.display='';
+  } else {
+    document.getElementById('manual-code-area').style.display='none';
+  }
+  showScreen('intro-screen');
+}
+
+function drawVoucher(amount,sender,greeting){
+  const cv=document.getElementById('voucher-canvas');
+  const w=640,h=360;
+  cv.width=w;cv.height=h;
+  cv.style.width=Math.min(window.innerWidth*.85,360)+'px';
+  const ctx=cv.getContext('2d');
+  // Background gradient
+  const bg=ctx.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0,'#cc0000');bg.addColorStop(.5,'#ee1111');bg.addColorStop(1,'#aa0000');
+  ctx.fillStyle=bg;
+  roundRect(ctx,0,0,w,h,24);ctx.fill();
+  // Inner gold border
+  ctx.strokeStyle='#ffd700';ctx.lineWidth=4;
+  roundRect(ctx,12,12,w-24,h-24,16);ctx.stroke();
+  // Decorative inner line
+  ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=1;
+  roundRect(ctx,20,20,w-40,h-40,12);ctx.stroke();
+  // Top label
+  ctx.fillStyle='#ffd700';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='bold 28px "Noto Serif TC",serif';
+  ctx.fillText('🧧 新年紅包兌換券 🧧',w/2,55);
+  // Amount - big
+  ctx.font='bold 72px "ZCOOL KuaiLe","Noto Serif TC",serif';
+  ctx.fillStyle='#ffd700';
+  ctx.shadowColor='rgba(255,215,0,0.4)';ctx.shadowBlur=20;
+  ctx.fillText(amount,w/2,h/2-10);
+  ctx.shadowBlur=0;
+  // Sender
+  if(sender){
+    ctx.font='24px "Noto Serif TC",serif';
+    ctx.fillStyle='rgba(255,215,0,0.8)';
+    ctx.fillText('來自：'+sender,w/2,h/2+50);
+  }
+  // Bottom line
+  ctx.font='18px "Noto Serif TC",serif';
+  ctx.fillStyle='rgba(255,215,0,0.5)';
+  const d=new Date();
+  const dateStr=(d.getMonth()+1)+'/'+d.getDate()+' 起 7 天內有效';
+  ctx.fillText('📱 截圖保存・找本人兌換',w/2,h-65);
+  ctx.font='14px "Noto Serif TC",serif';
+  ctx.fillStyle='rgba(255,215,0,0.35)';
+  ctx.fillText(dateStr,w/2,h-38);
+}
+
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 
 // ===== INTRO =====
 document.getElementById('start-btn').addEventListener('click',()=>{playCoinSound();showScreen('puzzle-screen');loadAndInitPuzzle();});
@@ -344,7 +454,7 @@ function loadAndInitPuzzle(){
       puzzleGrid[r]=[];
       for(let c=0;c<cols;c++){
         const cv=document.createElement('canvas');
-        const extra=Math.ceil(tabSize+2);
+        const extra=Math.ceil(tabSize*1.8);
         cv.width=Math.ceil(cellW+extra*2);cv.height=Math.ceil(cellH+extra*2);
         cv.className='puzzle-piece-cv';
         cv.dataset.col=c;cv.dataset.row=r;
@@ -372,7 +482,7 @@ function loadAndInitPuzzle(){
 }
 
 function positionAllPieces(){
-  const extra=Math.ceil(tabSize+2);
+  const extra=Math.ceil(tabSize*1.8);
   puzzlePieces.forEach((cv,i)=>{
     const pos=piecePositions[i];
     cv.style.left=(pos.c*cellW-extra)+'px';
@@ -382,73 +492,65 @@ function positionAllPieces(){
 
 function drawPiece(canvas,row,col,extra){
   const ctx=canvas.getContext('2d');
-  const w=cellW,h=cellH,ts=tabSize;
+  const w=cellW,h=cellH;
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
   ctx.translate(extra,extra);
-  // Build jigsaw path
+  // Build jigsaw clipping path
   ctx.beginPath();
   ctx.moveTo(0,0);
-  drawEdge(ctx,0,0,w,0,edgesH[row][col],'h');
-  drawEdge(ctx,w,0,w,h,edgesV[row][col+1],'v');
-  drawEdge(ctx,w,h,0,h,-edgesH[row+1][col],'h');
-  drawEdge(ctx,0,h,0,0,-edgesV[row][col],'v');
+  // Top: left to right
+  jigsawEdge(ctx,0,0,w,0,edgesH[row][col]);
+  // Right: top to bottom
+  jigsawEdge(ctx,w,0,w,h,edgesV[row][col+1]);
+  // Bottom: right to left
+  jigsawEdge(ctx,w,h,0,h,edgesH[row+1][col]);
+  // Left: bottom to top
+  jigsawEdge(ctx,0,h,0,0,edgesV[row][col]);
   ctx.closePath();
   ctx.clip();
-  // Draw image - extend beyond cell bounds to fill tabs
-  const margin=ts*1.5;
-  const sx=(col*puzzleImg.width/cols)-margin*(puzzleImg.width/boardW);
-  const sy=(row*puzzleImg.height/rows)-margin*(puzzleImg.height/boardH);
-  const sw=(puzzleImg.width/cols)+margin*2*(puzzleImg.width/boardW);
-  const sh=(puzzleImg.height/rows)+margin*2*(puzzleImg.height/boardH);
-  ctx.drawImage(puzzleImg,sx,sy,sw,sh,-margin,-margin,w+margin*2,h+margin*2);
-  // Border
-  ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=1.5;ctx.stroke();
+  // Draw the full image, positioned so this cell lines up
+  // The canvas has 'extra' padding on all sides, the cell occupies (extra,extra) to (extra+w, extra+h)
+  // We need the full board image placed so that pixel (col*cellW, row*cellH) maps to canvas (extra, extra)
+  ctx.drawImage(puzzleImg,
+    0, 0, puzzleImg.width, puzzleImg.height,
+    -col*cellW, -row*cellH,
+    boardW, boardH
+  );
+  // Subtle gold border along jigsaw edge
+  ctx.strokeStyle='rgba(255,215,0,0.25)';
+  ctx.lineWidth=1.2;
+  ctx.stroke();
   ctx.restore();
 }
 
-function drawEdge(ctx,x1,y1,x2,y2,type,dir){
+// Draw one edge of a jigsaw piece: classic semicircle tab with narrow neck
+function jigsawEdge(ctx,x1,y1,x2,y2,type){
   if(type===0){ctx.lineTo(x2,y2);return;}
-  const ts=tabSize*type;
-  if(dir==='h'){
-    // Horizontal edge - tab/blank goes up(+) or down(-)
-    const mx=(x1+x2)/2, my=y1;
-    const nw=Math.abs(x2-x1); // edge length
-    const neckW=nw*0.12;
-    const bulgeW=nw*0.18;
-    const bulgeH=ts*1.6;
-    const sign=x2>x1?1:-1;
-    // Go to neck start
-    ctx.lineTo(x1+sign*(nw/2-neckW),my);
-    // Neck in
-    ctx.lineTo(x1+sign*(nw/2-neckW),my-ts*0.4);
-    // Bulge - round circle using arc-like bezier
-    ctx.bezierCurveTo(
-      x1+sign*(nw/2-bulgeW),my-bulgeH,
-      x1+sign*(nw/2+bulgeW),my-bulgeH,
-      x1+sign*(nw/2+neckW),my-ts*0.4
-    );
-    // Neck out
-    ctx.lineTo(x1+sign*(nw/2+neckW),my);
-    ctx.lineTo(x2,y2);
-  }else{
-    // Vertical edge - tab/blank goes left(+) or right(-)
-    const mx=x1, my=(y1+y2)/2;
-    const nh=Math.abs(y2-y1);
-    const neckH=nh*0.12;
-    const bulgeH=nh*0.18;
-    const bulgeW=ts*1.6;
-    const sign=y2>y1?1:-1;
-    ctx.lineTo(mx,y1+sign*(nh/2-neckH));
-    ctx.lineTo(mx-ts*0.4,y1+sign*(nh/2-neckH));
-    ctx.bezierCurveTo(
-      mx-bulgeW,y1+sign*(nh/2-bulgeH),
-      mx-bulgeW,y1+sign*(nh/2+bulgeH),
-      mx-ts*0.4,y1+sign*(nh/2+neckH)
-    );
-    ctx.lineTo(mx,y1+sign*(nh/2+neckH));
-    ctx.lineTo(x2,y2);
-  }
+  const dx=x2-x1, dy=y2-y1;
+  const len=Math.sqrt(dx*dx+dy*dy);
+  const ux=dx/len, uy=dy/len;     // along edge
+  const nx=-uy, ny=ux;             // perpendicular
+  const r=tabSize*0.7;             // semicircle radius
+  const neckW=r*0.65;              // neck is narrower than circle
+  const mid=len/2;
+  const td=type; // +1=outward, -1=inward
+
+  // Walk to neck start
+  ctx.lineTo(x1+ux*(mid-neckW), y1+uy*(mid-neckW));
+  // Neck indent (slight inward pinch for classic look)
+  const neckDepth=r*0.15*td;
+  ctx.lineTo(x1+ux*(mid-neckW)+nx*neckDepth, y1+uy*(mid-neckW)+ny*neckDepth);
+  // Semicircle: use arc centered at edge midpoint offset outward
+  const cx=x1+ux*mid + nx*r*td;
+  const cy=y1+uy*mid + ny*r*td;
+  const sa=Math.atan2((y1+uy*(mid-neckW)+ny*neckDepth)-cy, (x1+ux*(mid-neckW)+nx*neckDepth)-cx);
+  const ea=Math.atan2((y1+uy*(mid+neckW)+ny*neckDepth)-cy, (x1+ux*(mid+neckW)+nx*neckDepth)-cx);
+  ctx.arc(cx,cy,r,sa,ea,td>0);
+  // Neck back
+  ctx.lineTo(x1+ux*(mid+neckW), y1+uy*(mid+neckW));
+  // Continue to end
+  ctx.lineTo(x2,y2);
 }
 
 function shufflePieces(){
@@ -579,7 +681,10 @@ cv.addEventListener('touchend',()=>isS=false);}
 function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();showScreen('prize-screen');},CONFIG.prizeDelay);}}
 
 // ===== PRIZE =====
-document.getElementById('btn-claim').addEventListener('click',async()=>{const code=CONFIG.giftCode;try{await navigator.clipboard.writeText(code);}catch{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 序號已複製！\n正在跳轉...');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;if(g.url)setTimeout(()=>{window.location.href=g.url;},1500);});
+document.getElementById('btn-claim').addEventListener('click',async()=>{
+if(CONFIG.amount||CONFIG.voucherImg){showToast('📱 請截圖保存兌換券！\n找送禮人兌換');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;if(g.url)setTimeout(()=>{window.location.href=g.url;},2000);}
+else{const code=CONFIG.giftCode;if(code){try{await navigator.clipboard.writeText(code);}catch{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}}showToast('✅ 已複製！');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;if(g.url)setTimeout(()=>{window.location.href=g.url;},1500);}
+});
 document.getElementById('btn-make-own').addEventListener('click',()=>{window.location.href=location.origin+location.pathname;});
 
 init();
