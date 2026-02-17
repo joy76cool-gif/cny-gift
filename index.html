@@ -171,7 +171,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
   <div id="prize-area" style="display:none;text-align:center;margin-top:15px;animation:prizeAppear .6s ease-out">
     <canvas id="voucher-canvas" style="border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw"></canvas>
     <img id="voucher-custom-img" style="display:none;border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw;max-height:40vh">
-    <div style="margin-top:12px;font-size:.85rem;color:#ffaaaa">📱 截圖保存，找送禮人兌換！</div>
+    <div style="margin-top:12px;font-size:.85rem;color:#ffaaaa">📱 長按圖片即可保存兌換券！</div>
     <button class="btn-make-own" id="btn-make-own" style="margin-top:20px">✨ 我也要做一個送朋友</button>
   </div>
 </div>
@@ -323,11 +323,11 @@ function drawVoucher(prizeName,greeting){
   // Bottom
   ctx.font='18px "Noto Serif TC",serif';
   ctx.fillStyle='rgba(255,215,0,0.5)';
-  ctx.fillText('📱 截圖保存・找送禮人兌換',w/2,h-55);
+  ctx.fillText('📱 長按保存・找送禮人兌換',w/2,h-60);
   const d=new Date();
-  ctx.font='14px "Noto Serif TC",serif';
-  ctx.fillStyle='rgba(255,215,0,0.35)';
-  ctx.fillText((d.getMonth()+1)+'/'+d.getDate()+' 起 7 天內有效',w/2,h-30);
+  ctx.font='bold 22px "Noto Serif TC",serif';
+  ctx.fillStyle='rgba(255,215,0,0.6)';
+  ctx.fillText('⏰ '+(d.getMonth()+1)+'/'+d.getDate()+' 起 7 天內有效',w/2,h-30);
 }
 
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
@@ -369,6 +369,12 @@ function loadAndInitPuzzle(){
     pieceExtra=Math.ceil(Math.max(cellW,cellH)*0.3);
 
     // Generate edge map (random tabs/blanks)
+    // Each internal edge is shared by two adjacent pieces.
+    // We store +1 or -1 randomly. When drawing:
+    //   - Top edge of piece(r,c) uses edgesH[r][c] as-is
+    //   - Bottom edge uses -edgesH[r+1][c] (flipped, so they interlock)
+    //   - Left edge of piece(r,c) uses edgesV[r][c] as-is
+    //   - Right edge uses -edgesV[r][c+1] (flipped, so they interlock)
     edgesH=[];edgesV=[];
     for(let r=0;r<=rows;r++){edgesH[r]=[];for(let c=0;c<cols;c++)edgesH[r][c]=(r===0||r===rows)?0:(Math.random()>.5?1:-1);}
     for(let r=0;r<rows;r++){edgesV[r]=[];for(let c=0;c<=cols;c++)edgesV[r][c]=(c===0||c===cols)?0:(Math.random()>.5?1:-1);}
@@ -440,10 +446,10 @@ function drawPiece(canvas,row,col,extra,highlight){
   // Build jigsaw clip path
   ctx.beginPath();
   ctx.moveTo(0,0);
-  tabEdge(ctx, 0,0, w,0, edgesH[row][col]);
-  tabEdge(ctx, w,0, w,h, edgesV[row][col+1]);
-  tabEdge(ctx, w,h, 0,h, edgesH[row+1][col]);
-  tabEdge(ctx, 0,h, 0,0, edgesV[row][col]);
+  tabEdge(ctx, 0,0, w,0, edgesH[row][col]);       // top edge
+  tabEdge(ctx, w,0, w,h, -edgesV[row][col+1]);    // right edge (flipped for interlocking)
+  tabEdge(ctx, w,h, 0,h, -edgesH[row+1][col]);    // bottom edge (flipped for interlocking)
+  tabEdge(ctx, 0,h, 0,0, edgesV[row][col]);       // left edge
   ctx.closePath();
   
   // Save path for border
@@ -640,7 +646,23 @@ cv.addEventListener('touchstart',e=>{isS=true;scratch(gp(e).x,gp(e).y);e.prevent
 cv.addEventListener('touchmove',e=>{if(isS){const p=gp(e);scratch(p.x,p.y);}e.preventDefault();},{passive:false});
 cv.addEventListener('touchend',()=>isS=false);}
 
-function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';document.getElementById('scratch-hint').style.display='none';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();document.getElementById('prize-area').style.display='block';},1500);}}
+function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';document.getElementById('scratch-hint').style.display='none';setTimeout(()=>{playJackpotSound();spawnCoins(20,2000);fireMultipleFireworks();if(navigator.vibrate)navigator.vibrate([100,50,100,50,200]);document.getElementById('prize-area').style.display='block';
+// Convert voucher canvas to img for long-press save
+setTimeout(()=>{
+  const vc=document.getElementById('voucher-canvas');
+  if(vc&&vc.style.display!=='none'){
+    try{
+      const dataUrl=vc.toDataURL('image/png');
+      const saveImg=document.createElement('img');
+      saveImg.src=dataUrl;
+      saveImg.style.cssText='border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw;display:block;margin:0 auto;';
+      saveImg.alt='兌換券 - 長按保存';
+      vc.parentNode.insertBefore(saveImg,vc);
+      vc.style.display='none';
+    }catch(e){}
+  }
+},300);
+},1500);}}
 
 // ===== PRIZE =====
 document.getElementById('btn-make-own').addEventListener('click',()=>{window.location.href=location.origin+location.pathname;});
