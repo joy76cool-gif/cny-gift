@@ -110,13 +110,26 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       <input type="file" accept="image/*" class="form-file-input" id="photo-input">
       <img class="photo-preview" id="photo-preview">
     </div>
-    <div class="form-group"><label class="form-label">🏆 獎品名稱</label><input type="text" class="form-input" id="prize-input" placeholder="例：當少爺一天券、$888紅包"></div>
-    <div class="form-group">
-      <label class="form-label">🎨 自訂兌換券圖片 <span style="font-size:.75rem;color:#aa8888">（選填，不傳會自動產生）</span></label>
-      <label class="form-file-label" id="voucher-label" style="padding:15px"><span id="voucher-label-text">📎 上傳自訂兌換券圖片</span></label>
-      <input type="file" accept="image/*" class="form-file-input" id="voucher-input">
+    <div class="form-group"><label class="form-label">🏆 獎品類型</label>
+      <select class="form-select" id="prize-type-select">
+        <option value="custom" selected>🎨 自訂兌換券</option><option value="link">🔗 商品兌換券連結</option>
+      </select>
     </div>
-    <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="新年快樂，點蛇成金" value="新年快樂，點蛇成金，joy超發財"></div>
+    <!-- 自訂兌換券區塊 -->
+    <div id="prize-custom-fields">
+      <div class="form-group"><label class="form-label">🏆 獎品名稱</label><input type="text" class="form-input" id="prize-input" placeholder="例：當少爺一天券、$888紅包"></div>
+      <div class="form-group">
+        <label class="form-label">🎨 自訂兌換券圖片 <span style="font-size:.75rem;color:#aa8888">（選填，不傳會自動產生）</span></label>
+        <label class="form-file-label" id="voucher-label" style="padding:15px"><span id="voucher-label-text">📎 上傳自訂兌換券圖片</span></label>
+        <input type="file" accept="image/*" class="form-file-input" id="voucher-input">
+      </div>
+    </div>
+    <!-- 商品連結區塊 -->
+    <div id="prize-link-fields" style="display:none">
+      <div class="form-group"><label class="form-label">🏆 獎品名稱</label><input type="text" class="form-input" id="prize-link-name" placeholder="例：星巴克買一送一券"></div>
+      <div class="form-group"><label class="form-label">🔗 兌換連結</label><input type="text" class="form-input" id="prize-link-url" placeholder="https://..."></div>
+    </div>
+    <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="新年快樂，馬尼多多" value="新年快樂，馬尼多多，喜悅發財"></div>
     <div class="form-group"><label class="form-label">🧩 拼圖難度</label>
       <select class="form-select" id="difficulty-select">
         <option value="4" selected>🟢 簡單</option><option value="5">🟡 中等</option><option value="6">🔴 困難</option>
@@ -171,6 +184,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
   <div id="prize-area" style="display:none;text-align:center;margin-top:15px;animation:prizeAppear .6s ease-out">
     <canvas id="voucher-canvas" style="border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw"></canvas>
     <img id="voucher-custom-img" style="display:none;border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw;max-height:40vh">
+    <div id="voucher-link-btn-wrap" style="display:none;margin-top:15px"><a id="voucher-link-btn" href="#" target="_blank" style="display:inline-block;padding:14px 40px;background:linear-gradient(135deg,#ff1a1a,#cc0000);color:#ffd700;border:2px solid #ffd700;border-radius:30px;font-family:'ZCOOL KuaiLe',serif;font-size:1.1rem;text-decoration:none;box-shadow:0 4px 20px rgba(255,0,0,.4);animation:pulse 2s ease-in-out infinite">🎁 立即兌換</a></div>
     <div style="margin-top:12px;font-size:.85rem;color:#ffaaaa">📱 長按圖片即可保存兌換券！</div>
     <button class="btn-make-own" id="btn-make-own" style="margin-top:20px">✨ 我也要做一個送朋友</button>
   </div>
@@ -184,7 +198,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 // ===== CONFIG =====
 const IMGBB_API_KEY='f3b38ce5bec9cb00a5ee4c5bf768ad2a';
 // Prize name is stored in CONFIG.prizeName
-let CONFIG={puzzleImage:'',prizeName:'',greeting:'新年快樂，點蛇成金，joy超發財',puzzleSize:4,scratchThreshold:0.45,voucherImg:''};
+let CONFIG={puzzleImage:'',prizeName:'',greeting:'新年快樂，馬尼多多，喜悅發財',puzzleSize:4,scratchThreshold:0.45,voucherImg:'',prizeLink:''};
 
 // ===== AUDIO =====
 let audioCtx=null;
@@ -241,11 +255,19 @@ async function uploadToImgBB(blob){
   });
 }
 
-function buildUrl(imageUrl,prize,greeting,size,voucherImg){const p=new URLSearchParams();p.set('p',imageUrl);p.set('r',prize);p.set('g',greeting);p.set('s',size);if(voucherImg)p.set('v',voucherImg);return location.origin+location.pathname+'?'+p.toString();}
-function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),prizeName:p.get('r')||'神秘大獎',greeting:p.get('g')||'新年快樂，點蛇成金，joy超發財',puzzleSize:parseInt(p.get('s'))||4,voucherImg:p.get('v')||''};}
+function buildUrl(imageUrl,prize,greeting,size,voucherImg,prizeLink){const p=new URLSearchParams();p.set('p',imageUrl);p.set('r',prize);p.set('g',greeting);p.set('s',size);if(voucherImg)p.set('v',voucherImg);if(prizeLink)p.set('l',prizeLink);return location.origin+location.pathname+'?'+p.toString();}
+function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),prizeName:p.get('r')||'神秘大獎',greeting:p.get('g')||'新年快樂，馬尼多多，喜悅發財',puzzleSize:parseInt(p.get('s'))||4,voucherImg:p.get('v')||'',prizeLink:p.get('l')||''};}
 
 // ===== CREATOR =====
 let selectedFile=null,selectedVoucherFile=null;
+
+// Prize type toggle
+document.getElementById('prize-type-select').addEventListener('change',e=>{
+  const isLink=e.target.value==='link';
+  document.getElementById('prize-custom-fields').style.display=isLink?'none':'block';
+  document.getElementById('prize-link-fields').style.display=isLink?'block':'none';
+});
+
 document.getElementById('file-label').addEventListener('click',()=>document.getElementById('photo-input').click());
 document.getElementById('photo-input').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;selectedFile=f;document.getElementById('file-label').classList.add('has-file');document.getElementById('file-label-text').textContent='✅ '+f.name;const rd=new FileReader();rd.onload=ev=>{const p=document.getElementById('photo-preview');p.src=ev.target.result;p.style.display='block';};rd.readAsDataURL(f);});
 
@@ -254,20 +276,30 @@ document.getElementById('voucher-input').addEventListener('change',e=>{const f=e
 
 document.getElementById('btn-generate').addEventListener('click',async()=>{
   if(!selectedFile){showToast('⚠️ 請先上傳照片');return;}
-  const prize=document.getElementById('prize-input').value.trim();
-  if(!prize){showToast('⚠️ 請輸入獎品名稱');return;}
-  const greeting=document.getElementById('greeting-input').value.trim()||'新年快樂，點蛇成金，joy超發財';
+  const prizeType=document.getElementById('prize-type-select').value;
+  let prize='',prizeLink='';
+  if(prizeType==='link'){
+    prize=document.getElementById('prize-link-name').value.trim();
+    if(!prize){showToast('⚠️ 請輸入獎品名稱');return;}
+    prizeLink=document.getElementById('prize-link-url').value.trim();
+    if(!prizeLink){showToast('⚠️ 請輸入兌換連結');return;}
+    if(!prizeLink.startsWith('http'))prizeLink='https://'+prizeLink;
+  } else {
+    prize=document.getElementById('prize-input').value.trim();
+    if(!prize){showToast('⚠️ 請輸入獎品名稱');return;}
+  }
+  const greeting=document.getElementById('greeting-input').value.trim()||'新年快樂，馬尼多多，喜悅發財';
   const size=parseInt(document.getElementById('difficulty-select').value);
   document.getElementById('loading-overlay').classList.add('show');
   try{
     const blob=await compressImage(selectedFile);
     const imageUrl=await uploadToImgBB(blob);
     let voucherUrl='';
-    if(selectedVoucherFile){
+    if(prizeType==='custom'&&selectedVoucherFile){
       const vBlob=await compressImage(selectedVoucherFile);
       voucherUrl=await uploadToImgBB(vBlob);
     }
-    const url=buildUrl(imageUrl,prize,greeting,size,voucherUrl);
+    const url=buildUrl(imageUrl,prize,greeting,size,voucherUrl,prizeLink);
     document.getElementById('link-display').textContent=url;
     document.getElementById('link-result').style.display='block';
     document.querySelector('.link-warning').textContent='📸 照片會在 7 天後自動刪除，請確保對方在期限內打開';
@@ -292,14 +324,21 @@ function setupPlayer(){
     img.src=CONFIG.voucherImg;img.style.display='block';
   } else {
     document.getElementById('voucher-custom-img').style.display='none';
-    drawVoucher(CONFIG.prizeName,CONFIG.greeting);
+    drawVoucher(CONFIG.prizeName,CONFIG.greeting,CONFIG.prizeLink);
+  }
+  // Setup prize link button
+  if(CONFIG.prizeLink){
+    const wrap=document.getElementById('voucher-link-btn-wrap');
+    const btn=document.getElementById('voucher-link-btn');
+    btn.href=CONFIG.prizeLink;
+    wrap.style.display='block';
   }
   showScreen('intro-screen');
 }
 
-function drawVoucher(prizeName,greeting){
+function drawVoucher(prizeName,greeting,prizeLink){
   const cv=document.getElementById('voucher-canvas');
-  const w=640,h=320;
+  const w=640,h=prizeLink?380:320;
   cv.width=w;cv.height=h;
   cv.style.width=Math.min(window.innerWidth*.85,360)+'px';
   const ctx=cv.getContext('2d');
@@ -318,11 +357,17 @@ function drawVoucher(prizeName,greeting){
   // Prize name - big
   ctx.font='bold 56px "ZCOOL KuaiLe","Noto Serif TC",serif';
   ctx.shadowColor='rgba(255,215,0,0.4)';ctx.shadowBlur=20;
-  ctx.fillText(prizeName,w/2,h/2);
+  ctx.fillText(prizeName,w/2,prizeLink?h/2-25:h/2);
   ctx.shadowBlur=0;
+  // Prize link hint
+  if(prizeLink){
+    ctx.font='bold 18px "Noto Serif TC",serif';
+    ctx.fillStyle='rgba(255,215,0,0.7)';
+    ctx.fillText('👇 點擊下方按鈕前往兌換',w/2,h/2+20);
+  }
   // Bottom
-  ctx.font='18px "Noto Serif TC",serif';
   ctx.fillStyle='rgba(255,215,0,0.5)';
+  ctx.font='18px "Noto Serif TC",serif';
   ctx.fillText('📱 長按保存・找送禮人兌換',w/2,h-60);
   const d=new Date();
   ctx.font='bold 22px "Noto Serif TC",serif';
