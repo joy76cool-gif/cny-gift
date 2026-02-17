@@ -109,15 +109,13 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       <input type="file" accept="image/*" class="form-file-input" id="photo-input">
       <img class="photo-preview" id="photo-preview">
     </div>
-    <div class="form-group"><label class="form-label">🔑 禮物卡序號</label><input type="text" class="form-input" id="code-input" placeholder="例：UBER-EAT-1234-5678"></div>
+    <div class="form-group"><label class="form-label">🔑 序號 / 金額 / 備註</label><input type="text" class="form-input" id="code-input" placeholder="例：紅包$500、序號、轉帳備註"></div>
     <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="恭喜發財，大吉大利" value="恭喜發財，大吉大利"></div>
     <div class="form-group"><label class="form-label">🎁 禮物類型</label>
       <select class="form-select" id="gift-type-select">
-        <option value="ubereats">🍔 Uber Eats 禮物卡</option>
-        <option value="starbucks">☕ 星巴克禮物卡</option>
-        <option value="foodpanda">🐼 foodpanda 禮物卡</option>
-        <option value="momo">🛒 momo 購物金</option>
-        <option value="custom">🎁 其他禮物</option>
+        <option value="linepay" selected>💰 LINE 轉帳紅包</option>
+        <option value="giftcard">🎫 禮物卡（Uber Eats、星巴克等）</option>
+        <option value="custom">🎁 自訂禮物</option>
       </select>
     </div>
     <div class="form-group"><label class="form-label">🧩 拼圖難度</label>
@@ -188,8 +186,8 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 <script>
 // ===== CONFIG =====
 const IMGBB_API_KEY='f3b38ce5bec9cb00a5ee4c5bf768ad2a';
-const GIFT_TYPES={ubereats:{emoji:'🍔',label:'恭喜獲得<br>Uber Eats 美食禮物卡！',btn:'🍔 領取 Uber Eats 禮物卡',url:'https://www.ubereats.com'},starbucks:{emoji:'☕',label:'恭喜獲得<br>星巴克禮物卡！',btn:'☕ 領取星巴克禮物卡',url:'https://www.starbucks.com.tw'},foodpanda:{emoji:'🐼',label:'恭喜獲得<br>foodpanda 美食禮物卡！',btn:'🐼 領取 foodpanda 禮物卡',url:'https://www.foodpanda.com.tw'},momo:{emoji:'🛒',label:'恭喜獲得<br>momo 購物金！',btn:'🛒 領取 momo 購物金',url:'https://www.momoshop.com.tw'},custom:{emoji:'🎁',label:'恭喜獲得<br>神秘禮物！',btn:'🎁 領取禮物',url:''}};
-let CONFIG={puzzleImage:'',giftCode:'',greeting:'恭喜發財，大吉大利',giftType:'ubereats',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000};
+const GIFT_TYPES={linepay:{emoji:'💰',label:'恭喜獲得<br>新年紅包！🧧',btn:'💰 打開 LINE 領取紅包',url:'https://line.me/R/'},giftcard:{emoji:'🎫',label:'恭喜獲得<br>禮物卡！🎉',btn:'🎫 複製序號領取禮物卡',url:''},custom:{emoji:'🎁',label:'恭喜獲得<br>神秘禮物！',btn:'🎁 領取禮物',url:''}};
+let CONFIG={puzzleImage:'',giftCode:'',greeting:'恭喜發財，大吉大利',giftType:'linepay',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000};
 
 // ===== AUDIO =====
 let audioCtx=null;
@@ -247,7 +245,7 @@ async function uploadToImgBB(blob){
 }
 
 function buildUrl(imageUrl,code,greeting,type,size){const p=new URLSearchParams();p.set('p',imageUrl);p.set('c',code);p.set('g',greeting);p.set('t',type);p.set('s',size);return location.origin+location.pathname+'?'+p.toString();}
-function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'恭喜發財，大吉大利',giftType:p.get('t')||'ubereats',puzzleSize:parseInt(p.get('s'))||4};}
+function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'恭喜發財，大吉大利',giftType:p.get('t')||'linepay',puzzleSize:parseInt(p.get('s'))||4};}
 
 // ===== CREATOR =====
 let selectedFile=null;
@@ -257,7 +255,7 @@ document.getElementById('photo-input').addEventListener('change',async e=>{const
 document.getElementById('btn-generate').addEventListener('click',async()=>{
   if(!selectedFile){showToast('⚠️ 請先上傳照片');return;}
   const code=document.getElementById('code-input').value.trim();
-  if(!code){showToast('⚠️ 請輸入禮物卡序號');return;}
+  if(!code){showToast('⚠️ 請輸入序號或備註');return;}
   const greeting=document.getElementById('greeting-input').value.trim()||'恭喜發財，大吉大利';
   const type=document.getElementById('gift-type-select').value;
   const size=parseInt(document.getElementById('difficulty-select').value);
@@ -279,7 +277,7 @@ document.getElementById('btn-preview').addEventListener('click',()=>window.open(
 
 // ===== INIT =====
 function init(){const d=readUrlParams();if(d){CONFIG={...CONFIG,...d};setupPlayer();return;}showScreen('creator-screen');}
-function setupPlayer(){const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.ubereats;document.getElementById('greeting-text').textContent=CONFIG.greeting;document.getElementById('prize-emoji').textContent=g.emoji;document.getElementById('prize-label').innerHTML=g.label;document.getElementById('btn-claim').textContent=g.btn;document.getElementById('manual-code-display').textContent=CONFIG.giftCode;showScreen('intro-screen');}
+function setupPlayer(){const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;document.getElementById('greeting-text').textContent=CONFIG.greeting;document.getElementById('prize-emoji').textContent=g.emoji;document.getElementById('prize-label').innerHTML=g.label;document.getElementById('btn-claim').textContent=g.btn;document.getElementById('manual-code-display').textContent=CONFIG.giftCode;showScreen('intro-screen');}
 
 // ===== INTRO =====
 document.getElementById('start-btn').addEventListener('click',()=>{playCoinSound();showScreen('puzzle-screen');loadAndInitPuzzle();});
@@ -314,7 +312,7 @@ function loadAndInitPuzzle(){
     boardW=Math.floor(boardW);boardH=Math.floor(boardH);
 
     cellW=boardW/cols;cellH=boardH/rows;
-    tabSize=Math.min(cellW,cellH)*0.2;
+    tabSize=Math.min(cellW,cellH)*0.25;
 
     // Generate edge map (random tabs/blanks)
     edgesH=[];edgesV=[];
@@ -390,41 +388,65 @@ function drawPiece(canvas,row,col,extra){
   ctx.translate(extra,extra);
   // Build jigsaw path
   ctx.beginPath();
-  // Top edge
   ctx.moveTo(0,0);
   drawEdge(ctx,0,0,w,0,edgesH[row][col],'h');
-  // Right edge
   drawEdge(ctx,w,0,w,h,edgesV[row][col+1],'v');
-  // Bottom edge (reversed)
   drawEdge(ctx,w,h,0,h,-edgesH[row+1][col],'h');
-  // Left edge (reversed)
   drawEdge(ctx,0,h,0,0,-edgesV[row][col],'v');
   ctx.closePath();
   ctx.clip();
-  // Draw image portion
-  const sx=col*puzzleImg.width/cols, sy=row*puzzleImg.height/rows;
-  const sw=puzzleImg.width/cols, sh=puzzleImg.height/rows;
-  ctx.drawImage(puzzleImg,sx,sy,sw,sh,-ts,- ts,w+ts*2,h+ts*2);
-  // Subtle border
-  ctx.strokeStyle='rgba(255,215,0,0.25)';ctx.lineWidth=1.5;ctx.stroke();
+  // Draw image - extend beyond cell bounds to fill tabs
+  const margin=ts*1.5;
+  const sx=(col*puzzleImg.width/cols)-margin*(puzzleImg.width/boardW);
+  const sy=(row*puzzleImg.height/rows)-margin*(puzzleImg.height/boardH);
+  const sw=(puzzleImg.width/cols)+margin*2*(puzzleImg.width/boardW);
+  const sh=(puzzleImg.height/rows)+margin*2*(puzzleImg.height/boardH);
+  ctx.drawImage(puzzleImg,sx,sy,sw,sh,-margin,-margin,w+margin*2,h+margin*2);
+  // Border
+  ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=1.5;ctx.stroke();
   ctx.restore();
 }
 
 function drawEdge(ctx,x1,y1,x2,y2,type,dir){
   if(type===0){ctx.lineTo(x2,y2);return;}
-  const mx=(x1+x2)/2, my=(y1+y2)/2;
   const ts=tabSize*type;
   if(dir==='h'){
-    // horizontal edge, tab goes up/down
-    ctx.lineTo(mx-cellW*0.15,y1);
-    ctx.bezierCurveTo(mx-cellW*0.05,y1, mx-cellW*0.1,y1-ts*1.2, mx,y1-ts*1.2);
-    ctx.bezierCurveTo(mx+cellW*0.1,y1-ts*1.2, mx+cellW*0.05,y1, mx+cellW*0.15,y1);
+    // Horizontal edge - tab/blank goes up(+) or down(-)
+    const mx=(x1+x2)/2, my=y1;
+    const nw=Math.abs(x2-x1); // edge length
+    const neckW=nw*0.12;
+    const bulgeW=nw*0.18;
+    const bulgeH=ts*1.6;
+    const sign=x2>x1?1:-1;
+    // Go to neck start
+    ctx.lineTo(x1+sign*(nw/2-neckW),my);
+    // Neck in
+    ctx.lineTo(x1+sign*(nw/2-neckW),my-ts*0.4);
+    // Bulge - round circle using arc-like bezier
+    ctx.bezierCurveTo(
+      x1+sign*(nw/2-bulgeW),my-bulgeH,
+      x1+sign*(nw/2+bulgeW),my-bulgeH,
+      x1+sign*(nw/2+neckW),my-ts*0.4
+    );
+    // Neck out
+    ctx.lineTo(x1+sign*(nw/2+neckW),my);
     ctx.lineTo(x2,y2);
   }else{
-    // vertical edge, tab goes left/right
-    ctx.lineTo(x2,my-cellH*0.15);
-    ctx.bezierCurveTo(x1,my-cellH*0.05, x1-ts*1.2,my-cellH*0.1, x1-ts*1.2,my);
-    ctx.bezierCurveTo(x1-ts*1.2,my+cellH*0.1, x1,my+cellH*0.05, x1,my+cellH*0.15);
+    // Vertical edge - tab/blank goes left(+) or right(-)
+    const mx=x1, my=(y1+y2)/2;
+    const nh=Math.abs(y2-y1);
+    const neckH=nh*0.12;
+    const bulgeH=nh*0.18;
+    const bulgeW=ts*1.6;
+    const sign=y2>y1?1:-1;
+    ctx.lineTo(mx,y1+sign*(nh/2-neckH));
+    ctx.lineTo(mx-ts*0.4,y1+sign*(nh/2-neckH));
+    ctx.bezierCurveTo(
+      mx-bulgeW,y1+sign*(nh/2-bulgeH),
+      mx-bulgeW,y1+sign*(nh/2+bulgeH),
+      mx-ts*0.4,y1+sign*(nh/2+neckH)
+    );
+    ctx.lineTo(mx,y1+sign*(nh/2+neckH));
     ctx.lineTo(x2,y2);
   }
 }
@@ -557,7 +579,7 @@ cv.addEventListener('touchend',()=>isS=false);}
 function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();showScreen('prize-screen');},CONFIG.prizeDelay);}}
 
 // ===== PRIZE =====
-document.getElementById('btn-claim').addEventListener('click',async()=>{const code=CONFIG.giftCode;try{await navigator.clipboard.writeText(code);}catch{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 序號已複製！\n正在跳轉...');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.ubereats;if(g.url)setTimeout(()=>{window.location.href=g.url;},1500);});
+document.getElementById('btn-claim').addEventListener('click',async()=>{const code=CONFIG.giftCode;try{await navigator.clipboard.writeText(code);}catch{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 序號已複製！\n正在跳轉...');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;if(g.url)setTimeout(()=>{window.location.href=g.url;},1500);});
 document.getElementById('btn-make-own').addEventListener('click',()=>{window.location.href=location.origin+location.pathname;});
 
 init();
