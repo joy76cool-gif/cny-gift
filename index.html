@@ -48,8 +48,8 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 .puzzle-board{position:relative;border:3px solid #ffd700;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,.2);background:rgba(0,0,0,.3);overflow:visible}
 .puzzle-piece-cv{position:absolute;cursor:pointer;z-index:1;transition:transform .15s}
 .puzzle-piece-cv.selected{z-index:5;transform:scale(1.08);filter:drop-shadow(0 0 15px rgba(255,215,0,.9))!important}
-.puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important;transform:none;outline:none}
-.puzzle-piece-cv.wrong{filter:drop-shadow(0 0 6px rgba(255,80,80,.8))}
+.puzzle-piece-cv.correct{cursor:default;z-index:0;transform:none}
+.puzzle-piece-cv:not(.correct){filter:drop-shadow(2px 2px 4px rgba(0,0,0,.5))}
 .puzzle-ref{border:2px solid #ffd700;border-radius:6px;opacity:.7;object-fit:contain;max-height:70px}
 .puzzle-progress{margin-top:8px;font-size:.85rem;color:#ffaaaa;white-space:nowrap}
 .puzzle-progress-bar{height:6px;background:#333;border-radius:3px;margin-top:6px;overflow:hidden}
@@ -89,7 +89,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 .firework{position:fixed;pointer-events:none;z-index:99}
 .firework-particle{position:absolute;width:4px;height:4px;border-radius:50%;animation:fb 1s ease-out forwards}
 @keyframes fb{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
-.copied-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.93);color:#ffd700;padding:24px 40px;border-radius:16px;font-size:1.2rem;border:2px solid #ffd700;z-index:9999;transition:transform .3s;text-align:center}.copied-toast.show{transform:translate(-50%,-50%) scale(1)}
+.copied-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.93);color:#ffd700;padding:20px 40px;border-radius:16px;font-size:1.1rem;border:2px solid #ffd700;z-index:9999;transition:transform .3s;text-align:center;white-space:nowrap}.copied-toast.show{transform:translate(-50%,-50%) scale(1)}
 .loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:9999;color:#ffd700;font-size:1.1rem;flex-direction:column;gap:15px}.loading-overlay.show{display:flex}
 .loading-spinner{width:40px;height:40px;border:3px solid rgba(255,215,0,.2);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -110,20 +110,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       <input type="file" accept="image/*" class="form-file-input" id="photo-input">
       <img class="photo-preview" id="photo-preview">
     </div>
-    <div class="form-group"><label class="form-label">🎁 禮物類型</label>
-      <select class="form-select" id="gift-type-select">
-        <option value="linepay" selected>💰 LINE 轉帳紅包</option>
-        <option value="giftcard">🎫 禮物卡（Uber Eats、星巴克等）</option>
-        <option value="custom">🎁 自訂禮物</option>
-      </select>
-    </div>
-    <div id="voucher-fields">
-      <div class="form-group"><label class="form-label">💰 金額</label><input type="text" class="form-input" id="amount-input" placeholder="例：$888" value="$888"></div>
-      <div class="form-group"><label class="form-label">👤 你的名字</label><input type="text" class="form-input" id="sender-input" placeholder="例：Joy" value="Joy"></div>
-    </div>
-    <div id="code-field" style="display:none">
-      <div class="form-group"><label class="form-label">🔑 序號 / 內容</label><input type="text" class="form-input" id="code-input" placeholder="禮物卡序號或自訂內容"></div>
-    </div>
+    <div class="form-group"><label class="form-label">🏆 獎品名稱</label><input type="text" class="form-input" id="prize-input" placeholder="例：當少爺一天券、$888紅包"></div>
     <div class="form-group">
       <label class="form-label">🎨 自訂兌換券圖片 <span style="font-size:.75rem;color:#aa8888">（選填，不傳會自動產生）</span></label>
       <label class="form-file-label" id="voucher-label" style="padding:15px"><span id="voucher-label-text">📎 上傳自訂兌換券圖片</span></label>
@@ -168,30 +155,24 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
   <button class="btn-shuffle" id="btn-shuffle">🔀 重新打亂</button>
 </div>
 
-<!-- SCRATCH -->
+<!-- SCRATCH + PRIZE (same screen) -->
 <div id="scratch-screen" class="screen">
   <div class="congrats-text">🎉 恭喜完成！</div>
   <div class="congrats-sub">新年快樂，祝您中大獎！</div>
   <div class="scratch-wrapper" id="scratch-wrapper">
-    <div class="scratch-bg"><div class="prize-icon" id="prize-emoji">🍔</div><div class="prize-text" id="prize-label">恭喜獲得<br>Uber Eats 美食禮物卡！</div></div>
+    <div class="scratch-bg">
+      <div class="prize-icon">🎊</div>
+      <div class="prize-text" id="prize-label">🏆 當少爺一天券</div>
+    </div>
     <canvas class="scratch-canvas" id="scratch-canvas"></canvas>
   </div>
-  <div class="scratch-hint">👆 用手指刮開看看</div>
-</div>
-
-<!-- PRIZE -->
-<div id="prize-screen" class="screen">
-  <div class="prize-reveal">
-    <div class="prize-big-icon">🎊</div>
-    <div class="prize-title">恭喜中獎！</div>
-    <div class="prize-desc">🧧 截圖保存，找送禮人兌換！</div>
-    <canvas id="voucher-canvas" style="border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:90vw"></canvas>
-    <img id="voucher-custom-img" style="display:none;border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:90vw;max-height:50vh">
-    <div style="margin-top:15px">
-      <button class="btn-claim" id="btn-claim">📱 截圖保存兌換券</button>
-    </div>
-    <div class="manual-code" id="manual-code-area">兌換碼：<span id="manual-code-display"></span></div>
-    <button class="btn-make-own" id="btn-make-own">✨ 我也要做一個送朋友</button>
+  <div class="scratch-hint" id="scratch-hint">👆 用手指刮開看看</div>
+  <!-- Prize area (hidden until scratched) -->
+  <div id="prize-area" style="display:none;text-align:center;margin-top:15px;animation:prizeAppear .6s ease-out">
+    <canvas id="voucher-canvas" style="border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw"></canvas>
+    <img id="voucher-custom-img" style="display:none;border-radius:16px;box-shadow:0 4px 30px rgba(255,0,0,.4);max-width:85vw;max-height:40vh">
+    <div style="margin-top:12px;font-size:.85rem;color:#ffaaaa">📱 截圖保存，找送禮人兌換！</div>
+    <button class="btn-make-own" id="btn-make-own" style="margin-top:20px">✨ 我也要做一個送朋友</button>
   </div>
 </div>
 
@@ -202,8 +183,8 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 <script>
 // ===== CONFIG =====
 const IMGBB_API_KEY='f3b38ce5bec9cb00a5ee4c5bf768ad2a';
-const GIFT_TYPES={linepay:{emoji:'💰',label:'恭喜獲得<br>新年紅包！🧧',btn:'💰 打開 LINE 領取紅包',url:'https://line.me/R/'},giftcard:{emoji:'🎫',label:'恭喜獲得<br>禮物卡！🎉',btn:'🎫 複製序號領取禮物卡',url:''},custom:{emoji:'🎁',label:'恭喜獲得<br>神秘禮物！',btn:'🎁 領取禮物',url:''}};
-let CONFIG={puzzleImage:'',giftCode:'',greeting:'新年快樂，點蛇成金，joy超發財',giftType:'linepay',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000,amount:'',sender:'',voucherImg:''};
+// Prize name is stored in CONFIG.prizeName
+let CONFIG={puzzleImage:'',prizeName:'',greeting:'新年快樂，點蛇成金，joy超發財',puzzleSize:4,scratchThreshold:0.45,voucherImg:''};
 
 // ===== AUDIO =====
 let audioCtx=null;
@@ -260,33 +241,21 @@ async function uploadToImgBB(blob){
   });
 }
 
-function buildUrl(imageUrl,code,greeting,type,size,amount,sender,voucherImg){const p=new URLSearchParams();p.set('p',imageUrl);if(code)p.set('c',code);p.set('g',greeting);p.set('t',type);p.set('s',size);if(amount)p.set('a',amount);if(sender)p.set('n',sender);if(voucherImg)p.set('v',voucherImg);return location.origin+location.pathname+'?'+p.toString();}
-function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'新年快樂，點蛇成金，joy超發財',giftType:p.get('t')||'linepay',puzzleSize:parseInt(p.get('s'))||4,amount:p.get('a')||'',sender:p.get('n')||'',voucherImg:p.get('v')||''};}
+function buildUrl(imageUrl,prize,greeting,size,voucherImg){const p=new URLSearchParams();p.set('p',imageUrl);p.set('r',prize);p.set('g',greeting);p.set('s',size);if(voucherImg)p.set('v',voucherImg);return location.origin+location.pathname+'?'+p.toString();}
+function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),prizeName:p.get('r')||'神秘大獎',greeting:p.get('g')||'新年快樂，點蛇成金，joy超發財',puzzleSize:parseInt(p.get('s'))||4,voucherImg:p.get('v')||''};}
 
 // ===== CREATOR =====
 let selectedFile=null,selectedVoucherFile=null;
 document.getElementById('file-label').addEventListener('click',()=>document.getElementById('photo-input').click());
 document.getElementById('photo-input').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;selectedFile=f;document.getElementById('file-label').classList.add('has-file');document.getElementById('file-label-text').textContent='✅ '+f.name;const rd=new FileReader();rd.onload=ev=>{const p=document.getElementById('photo-preview');p.src=ev.target.result;p.style.display='block';};rd.readAsDataURL(f);});
 
-// Voucher upload
 document.getElementById('voucher-label').addEventListener('click',()=>document.getElementById('voucher-input').click());
 document.getElementById('voucher-input').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;selectedVoucherFile=f;document.getElementById('voucher-label').classList.add('has-file');document.getElementById('voucher-label-text').textContent='✅ '+f.name;});
 
-// Toggle fields based on gift type
-document.getElementById('gift-type-select').addEventListener('change',e=>{
-  const v=e.target.value;
-  document.getElementById('voucher-fields').style.display=(v==='linepay')?'':'none';
-  document.getElementById('code-field').style.display=(v!=='linepay')?'':'none';
-});
-
 document.getElementById('btn-generate').addEventListener('click',async()=>{
   if(!selectedFile){showToast('⚠️ 請先上傳照片');return;}
-  const type=document.getElementById('gift-type-select').value;
-  const amount=document.getElementById('amount-input')?.value.trim()||'';
-  const sender=document.getElementById('sender-input')?.value.trim()||'';
-  const code=document.getElementById('code-input')?.value.trim()||'';
-  if(type==='linepay'&&!amount){showToast('⚠️ 請輸入金額');return;}
-  if(type!=='linepay'&&!code){showToast('⚠️ 請輸入序號或內容');return;}
+  const prize=document.getElementById('prize-input').value.trim();
+  if(!prize){showToast('⚠️ 請輸入獎品名稱');return;}
   const greeting=document.getElementById('greeting-input').value.trim()||'新年快樂，點蛇成金，joy超發財';
   const size=parseInt(document.getElementById('difficulty-select').value);
   document.getElementById('loading-overlay').classList.add('show');
@@ -298,7 +267,7 @@ document.getElementById('btn-generate').addEventListener('click',async()=>{
       const vBlob=await compressImage(selectedVoucherFile);
       voucherUrl=await uploadToImgBB(vBlob);
     }
-    const url=buildUrl(imageUrl,code,greeting,type,size,amount,sender,voucherUrl);
+    const url=buildUrl(imageUrl,prize,greeting,size,voucherUrl);
     document.getElementById('link-display').textContent=url;
     document.getElementById('link-result').style.display='block';
     document.querySelector('.link-warning').textContent='📸 照片會在 7 天後自動刪除，請確保對方在期限內打開';
@@ -307,85 +276,58 @@ document.getElementById('btn-generate').addEventListener('click',async()=>{
   document.getElementById('loading-overlay').classList.remove('show');
 });
 
-document.getElementById('btn-copy-link').addEventListener('click',async()=>{const u=document.getElementById('link-display').textContent;try{await navigator.clipboard.writeText(u);}catch{const t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 連結已複製！\n傳給對方就能玩');});
+document.getElementById('btn-copy-link').addEventListener('click',async()=>{const u=document.getElementById('link-display').textContent;try{await navigator.clipboard.writeText(u);}catch{const t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 連結已複製');});
 document.getElementById('btn-preview').addEventListener('click',()=>window.open(document.getElementById('link-display').textContent,'_blank'));
 
 // ===== INIT =====
 function init(){const d=readUrlParams();if(d){CONFIG={...CONFIG,...d};setupPlayer();return;}showScreen('creator-screen');}
 function setupPlayer(){
-  const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;
   document.getElementById('greeting-text').textContent=CONFIG.greeting;
-  document.getElementById('prize-emoji').textContent=g.emoji;
-  document.getElementById('prize-label').innerHTML=g.label;
-  // Setup prize screen
+  // Set prize label in scratch card
+  document.getElementById('prize-label').textContent='🏆 '+CONFIG.prizeName;
+  // Setup voucher
   if(CONFIG.voucherImg){
-    // Custom voucher image
     document.getElementById('voucher-canvas').style.display='none';
     const img=document.getElementById('voucher-custom-img');
     img.src=CONFIG.voucherImg;img.style.display='block';
-    document.getElementById('btn-claim').textContent='📱 截圖保存兌換券';
-  } else if(CONFIG.amount){
-    // Auto-generate voucher
-    document.getElementById('voucher-custom-img').style.display='none';
-    drawVoucher(CONFIG.amount,CONFIG.sender,CONFIG.greeting);
-    document.getElementById('btn-claim').textContent='📱 截圖保存兌換券';
   } else {
-    // Gift card / custom mode
-    document.getElementById('voucher-canvas').style.display='none';
     document.getElementById('voucher-custom-img').style.display='none';
-    document.getElementById('btn-claim').textContent=g.btn;
-  }
-  if(CONFIG.giftCode){
-    document.getElementById('manual-code-display').textContent=CONFIG.giftCode;
-    document.getElementById('manual-code-area').style.display='';
-  } else {
-    document.getElementById('manual-code-area').style.display='none';
+    drawVoucher(CONFIG.prizeName,CONFIG.greeting);
   }
   showScreen('intro-screen');
 }
 
-function drawVoucher(amount,sender,greeting){
+function drawVoucher(prizeName,greeting){
   const cv=document.getElementById('voucher-canvas');
-  const w=640,h=360;
+  const w=640,h=320;
   cv.width=w;cv.height=h;
   cv.style.width=Math.min(window.innerWidth*.85,360)+'px';
   const ctx=cv.getContext('2d');
-  // Background gradient
   const bg=ctx.createLinearGradient(0,0,w,h);
   bg.addColorStop(0,'#cc0000');bg.addColorStop(.5,'#ee1111');bg.addColorStop(1,'#aa0000');
   ctx.fillStyle=bg;
   roundRect(ctx,0,0,w,h,24);ctx.fill();
-  // Inner gold border
   ctx.strokeStyle='#ffd700';ctx.lineWidth=4;
   roundRect(ctx,12,12,w-24,h-24,16);ctx.stroke();
-  // Decorative inner line
   ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=1;
   roundRect(ctx,20,20,w-40,h-40,12);ctx.stroke();
-  // Top label
+  // Title
   ctx.fillStyle='#ffd700';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font='bold 28px "Noto Serif TC",serif';
-  ctx.fillText('🧧 新年紅包兌換券 🧧',w/2,55);
-  // Amount - big
-  ctx.font='bold 72px "ZCOOL KuaiLe","Noto Serif TC",serif';
-  ctx.fillStyle='#ffd700';
+  ctx.font='bold 26px "Noto Serif TC",serif';
+  ctx.fillText('🧧 新年兌換券 🧧',w/2,50);
+  // Prize name - big
+  ctx.font='bold 56px "ZCOOL KuaiLe","Noto Serif TC",serif';
   ctx.shadowColor='rgba(255,215,0,0.4)';ctx.shadowBlur=20;
-  ctx.fillText(amount,w/2,h/2-10);
+  ctx.fillText(prizeName,w/2,h/2);
   ctx.shadowBlur=0;
-  // Sender
-  if(sender){
-    ctx.font='24px "Noto Serif TC",serif';
-    ctx.fillStyle='rgba(255,215,0,0.8)';
-    ctx.fillText('來自：'+sender,w/2,h/2+50);
-  }
-  // Bottom line
+  // Bottom
   ctx.font='18px "Noto Serif TC",serif';
   ctx.fillStyle='rgba(255,215,0,0.5)';
+  ctx.fillText('📱 截圖保存・找送禮人兌換',w/2,h-55);
   const d=new Date();
-  const dateStr=(d.getMonth()+1)+'/'+d.getDate()+' 起 7 天內有效';
-  ctx.fillText('📱 截圖保存・找本人兌換',w/2,h-65);
   ctx.font='14px "Noto Serif TC",serif';
   ctx.fillStyle='rgba(255,215,0,0.35)';
-  ctx.fillText(dateStr,w/2,h-38);
+  ctx.fillText((d.getMonth()+1)+'/'+d.getDate()+' 起 7 天內有效',w/2,h-30);
 }
 
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
@@ -395,7 +337,7 @@ document.getElementById('start-btn').addEventListener('click',()=>{playCoinSound
 
 // ===== PUZZLE ENGINE (auto-ratio, no overlap, jigsaw edges) =====
 let puzzlePieces=[],correctCount=0,totalPieces=0;
-let puzzleImg=null,cols=0,rows=0,cellW=0,cellH=0,boardW=0,boardH=0,tabSize=0;
+let puzzleImg=null,cols=0,rows=0,cellW=0,cellH=0,boardW=0,boardH=0,tabSize=0,pieceExtra=0;
 let edgesH=[],edgesV=[];
 let puzzleGrid=[],piecePositions=[];
 
@@ -423,7 +365,8 @@ function loadAndInitPuzzle(){
     boardW=Math.floor(boardW);boardH=Math.floor(boardH);
 
     cellW=boardW/cols;cellH=boardH/rows;
-    tabSize=Math.min(cellW,cellH)*0.25;
+    tabSize=Math.min(cellW,cellH)*0.12;
+    pieceExtra=Math.ceil(Math.max(cellW,cellH)*0.3);
 
     // Generate edge map (random tabs/blanks)
     edgesH=[];edgesV=[];
@@ -446,8 +389,6 @@ function loadAndInitPuzzle(){
 
     puzzlePieces=[];correctCount=0;updateProgress();
 
-    // Grid tracks which piece is at which position
-    // grid[r][c] = piece index; pieceAt[i] = {r,c}
     puzzleGrid=[];piecePositions=[];
     const piecesArr=[];
     let idx=0;
@@ -455,13 +396,12 @@ function loadAndInitPuzzle(){
       puzzleGrid[r]=[];
       for(let c=0;c<cols;c++){
         const cv=document.createElement('canvas');
-        const extra=Math.ceil(tabSize*1.8);
-        cv.width=Math.ceil(cellW+extra*2);cv.height=Math.ceil(cellH+extra*2);
+        cv.width=Math.ceil(cellW+pieceExtra*2);cv.height=Math.ceil(cellH+pieceExtra*2);
         cv.className='puzzle-piece-cv';
         cv.dataset.col=c;cv.dataset.row=r;
         cv.dataset.idx=idx;
-        drawPiece(cv,r,c,extra);
-        cv.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
+        drawPiece(cv,r,c,pieceExtra,'wrong');
+        cv.classList.add('wrong');
         piecesArr.push(cv);
         puzzleGrid[r][c]=idx;
         piecePositions[idx]={r,c};
@@ -483,73 +423,95 @@ function loadAndInitPuzzle(){
 }
 
 function positionAllPieces(){
-  const extra=Math.ceil(tabSize*1.8);
   puzzlePieces.forEach((cv,i)=>{
     const pos=piecePositions[i];
-    cv.style.left=(pos.c*cellW-extra)+'px';
-    cv.style.top=(pos.r*cellH-extra)+'px';
+    cv.style.left=(pos.c*cellW-pieceExtra)+'px';
+    cv.style.top=(pos.r*cellH-pieceExtra)+'px';
   });
 }
 
-function drawPiece(canvas,row,col,extra){
+function drawPiece(canvas,row,col,extra,highlight){
   const ctx=canvas.getContext('2d');
   const w=cellW,h=cellH;
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.save();
   ctx.translate(extra,extra);
-  // Build jigsaw clipping path
+
+  // Build jigsaw clip path
   ctx.beginPath();
   ctx.moveTo(0,0);
-  // Top: left to right
-  jigsawEdge(ctx,0,0,w,0,edgesH[row][col]);
-  // Right: top to bottom
-  jigsawEdge(ctx,w,0,w,h,edgesV[row][col+1]);
-  // Bottom: right to left
-  jigsawEdge(ctx,w,h,0,h,edgesH[row+1][col]);
-  // Left: bottom to top
-  jigsawEdge(ctx,0,h,0,0,edgesV[row][col]);
+  tabEdge(ctx, 0,0, w,0, edgesH[row][col]);
+  tabEdge(ctx, w,0, w,h, edgesV[row][col+1]);
+  tabEdge(ctx, w,h, 0,h, edgesH[row+1][col]);
+  tabEdge(ctx, 0,h, 0,0, edgesV[row][col]);
   ctx.closePath();
+  
+  // Save path for border
+  ctx.save();
   ctx.clip();
-  // Draw the full image, positioned so this cell lines up
-  // The canvas has 'extra' padding on all sides, the cell occupies (extra,extra) to (extra+w, extra+h)
-  // We need the full board image placed so that pixel (col*cellW, row*cellH) maps to canvas (extra, extra)
+
+  // Draw image
   ctx.drawImage(puzzleImg,
     0, 0, puzzleImg.width, puzzleImg.height,
     -col*cellW, -row*cellH,
     boardW, boardH
   );
-  // Subtle gold border along jigsaw edge
-  ctx.strokeStyle='rgba(255,215,0,0.25)';
-  ctx.lineWidth=1.2;
-  ctx.stroke();
+  ctx.restore();
+
+  // Draw border along jigsaw edge
+  if(highlight==='wrong'){
+    ctx.strokeStyle='rgba(255,50,50,0.85)';
+    ctx.lineWidth=3.5;
+    ctx.stroke();
+    // Second glow pass
+    ctx.strokeStyle='rgba(255,150,0,0.4)';
+    ctx.lineWidth=6;
+    ctx.stroke();
+  } else if(highlight==='correct'){
+    ctx.strokeStyle='rgba(80,255,80,0.6)';
+    ctx.lineWidth=2;
+    ctx.stroke();
+  } else {
+    ctx.strokeStyle='rgba(0,0,0,0.3)';
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+  }
   ctx.restore();
 }
 
-// Draw one edge of a jigsaw piece: classic semicircle tab with narrow neck
-function jigsawEdge(ctx,x1,y1,x2,y2,type){
+function redrawPiece(cv, highlight){
+  const r=parseInt(cv.dataset.row), c=parseInt(cv.dataset.col);
+  drawPiece(cv,r,c,pieceExtra,highlight);
+}
+
+// Simple reliable tab: straight line with a semicircular bump
+function tabEdge(ctx, x1,y1, x2,y2, type){
   if(type===0){ctx.lineTo(x2,y2);return;}
   const dx=x2-x1, dy=y2-y1;
   const len=Math.sqrt(dx*dx+dy*dy);
-  const ux=dx/len, uy=dy/len;     // along edge
-  const nx=-uy, ny=ux;             // perpendicular
-  const r=tabSize*0.7;             // semicircle radius
-  const neckW=r*0.65;              // neck is narrower than circle
-  const mid=len/2;
-  const td=type; // +1=outward, -1=inward
+  // unit vectors
+  const ex=dx/len, ey=dy/len; // along edge
+  const nx=-ey, ny=ex;         // perpendicular (outward = left of travel for CW)
+  const r=len*0.12;            // tab radius (proportional to edge length)
+  const mid=len*0.5;
+  const sign=type; // +1 or -1
 
-  // Walk to neck start
-  ctx.lineTo(x1+ux*(mid-neckW), y1+uy*(mid-neckW));
-  // Neck indent (slight inward pinch for classic look)
-  const neckDepth=r*0.15*td;
-  ctx.lineTo(x1+ux*(mid-neckW)+nx*neckDepth, y1+uy*(mid-neckW)+ny*neckDepth);
-  // Semicircle: use arc centered at edge midpoint offset outward
-  const cx=x1+ux*mid + nx*r*td;
-  const cy=y1+uy*mid + ny*r*td;
-  const sa=Math.atan2((y1+uy*(mid-neckW)+ny*neckDepth)-cy, (x1+ux*(mid-neckW)+nx*neckDepth)-cx);
-  const ea=Math.atan2((y1+uy*(mid+neckW)+ny*neckDepth)-cy, (x1+ux*(mid+neckW)+nx*neckDepth)-cx);
-  ctx.arc(cx,cy,r,sa,ea,td>0);
-  // Neck back
-  ctx.lineTo(x1+ux*(mid+neckW), y1+uy*(mid+neckW));
+  // Point before tab
+  const bx=x1+ex*(mid-r), by=y1+ey*(mid-r);
+  ctx.lineTo(bx,by);
+
+  // Semicircle center
+  const cx=x1+ex*mid+nx*r*sign;
+  const cy=y1+ey*mid+ny*r*sign;
+
+  // Arc angles
+  const startAngle=Math.atan2(by-cy, bx-cx);
+  const endX=x1+ex*(mid+r), endY=y1+ey*(mid+r);
+  const endAngle=Math.atan2(endY-cy, endX-cx);
+
+  // Draw arc (counterclockwise for outward tab, clockwise for inward)
+  ctx.arc(cx,cy,r, startAngle, endAngle, sign>0);
+
   // Continue to end
   ctx.lineTo(x2,y2);
 }
@@ -577,7 +539,7 @@ function shufflePieces(){
   puzzlePieces.forEach(p=>{
     p.classList.remove('correct','selected','swap-anim');
     p.classList.add('wrong');
-    p.style.filter='drop-shadow(0 0 6px rgba(255,80,80,.8))';
+    redrawPiece(p,'wrong');
   });
   selectedPiece=null;
   isSwapping=false;
@@ -642,15 +604,17 @@ function checkAllCorrect(){
       if(!cv.classList.contains('correct')){
         cv.classList.add('correct');
         cv.classList.remove('wrong');
-        cv.style.filter='none';
+        redrawPiece(cv,'correct');
         const rect=cv.getBoundingClientRect();
         spawnCoinBurst(rect.left+rect.width/2,rect.top+rect.height/2);
       }
       correctCount++;
     } else {
-      cv.classList.remove('correct');
-      cv.classList.add('wrong');
-      cv.style.filter='drop-shadow(0 0 6px rgba(255,80,80,.8))';
+      if(cv.classList.contains('correct')){
+        cv.classList.remove('correct');
+        cv.classList.add('wrong');
+        redrawPiece(cv,'wrong');
+      }
     }
   });
   updateProgress();
@@ -676,13 +640,9 @@ cv.addEventListener('touchstart',e=>{isS=true;scratch(gp(e).x,gp(e).y);e.prevent
 cv.addEventListener('touchmove',e=>{if(isS){const p=gp(e);scratch(p.x,p.y);}e.preventDefault();},{passive:false});
 cv.addEventListener('touchend',()=>isS=false);}
 
-function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();showScreen('prize-screen');},CONFIG.prizeDelay);}}
+function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';document.getElementById('scratch-hint').style.display='none';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();document.getElementById('prize-area').style.display='block';},1500);}}
 
 // ===== PRIZE =====
-document.getElementById('btn-claim').addEventListener('click',async()=>{
-if(CONFIG.amount||CONFIG.voucherImg){showToast('📱 請截圖保存兌換券！\n找送禮人兌換');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;if(g.url)setTimeout(()=>{window.location.href=g.url;},2000);}
-else{const code=CONFIG.giftCode;if(code){try{await navigator.clipboard.writeText(code);}catch{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}}showToast('✅ 已複製！');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.linepay;if(g.url)setTimeout(()=>{window.location.href=g.url;},1500);}
-});
 document.getElementById('btn-make-own').addEventListener('click',()=>{window.location.href=location.origin+location.pathname;});
 
 init();
