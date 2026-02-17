@@ -7,110 +7,89 @@
 <meta property="og:title" content="🧧 新年驚喜等你來拆！">
 <meta property="og:description" content="有人送了你一份新年禮物，快來拆開看看！">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=ZCOOL+KuaiLe&display=swap');
-  body { font-family: 'Noto Serif TC', serif; background: #1a0a0a; color: #ffd700; overflow-x: hidden; min-height: 100vh; min-height: 100dvh; }
-  .bg-pattern { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 50%, rgba(200,0,0,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(200,0,0,0.2) 0%, transparent 50%), radial-gradient(circle at 50% 0%, rgba(255,215,0,0.1) 0%, transparent 40%); pointer-events: none; z-index: 0; }
-  .lantern { position: fixed; font-size: 40px; opacity: 0.15; animation: floatLantern 8s ease-in-out infinite; pointer-events: none; z-index: 0; }
-  .lantern:nth-child(2) { top: 10%; left: 5%; }
-  .lantern:nth-child(3) { top: 30%; right: 8%; animation-delay: 2s; font-size: 30px; }
-  .lantern:nth-child(4) { bottom: 20%; left: 10%; animation-delay: 4s; font-size: 35px; }
-  .lantern:nth-child(5) { top: 60%; right: 5%; animation-delay: 1s; font-size: 25px; }
-  @keyframes floatLantern { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
-  .screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; padding: 20px; position: relative; z-index: 1; }
-  .screen.active { display: flex; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=ZCOOL+KuaiLe&display=swap');
+body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow-x:hidden;min-height:100vh;min-height:100dvh}
+.bg-pattern{position:fixed;inset:0;background:radial-gradient(circle at 20% 50%,rgba(200,0,0,.3) 0%,transparent 50%),radial-gradient(circle at 80% 50%,rgba(200,0,0,.2) 0%,transparent 50%),radial-gradient(circle at 50% 0%,rgba(255,215,0,.1) 0%,transparent 40%);pointer-events:none;z-index:0}
+.lantern{position:fixed;font-size:40px;opacity:.15;animation:fl 8s ease-in-out infinite;pointer-events:none;z-index:0}
+.lantern:nth-child(2){top:10%;left:5%}.lantern:nth-child(3){top:30%;right:8%;animation-delay:2s;font-size:30px}.lantern:nth-child(4){bottom:20%;left:10%;animation-delay:4s;font-size:35px}.lantern:nth-child(5){top:60%;right:5%;animation-delay:1s;font-size:25px}
+@keyframes fl{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:20px;position:relative;z-index:1}.screen.active{display:flex}
 
-  /* CREATOR */
-  .creator-card { background: rgba(40,10,10,0.9); border: 2px solid #ffd700; border-radius: 20px; padding: 30px 25px; width: min(90vw,420px); box-shadow: 0 0 40px rgba(255,215,0,0.15); }
-  .creator-title { font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(1.4rem,5vw,2rem); color: #ffd700; text-align: center; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,215,0,0.4); }
-  .creator-subtitle { font-size: 0.85rem; color: #cc9999; text-align: center; margin-bottom: 25px; }
-  .form-group { margin-bottom: 18px; }
-  .form-label { display: block; font-size: 0.9rem; color: #ffcc88; margin-bottom: 6px; }
-  .form-input { width: 100%; padding: 12px 14px; background: rgba(0,0,0,0.4); border: 1.5px solid rgba(255,215,0,0.3); border-radius: 10px; color: #ffd700; font-family: 'Noto Serif TC',serif; font-size: 1rem; outline: none; transition: border-color 0.3s; }
-  .form-input:focus { border-color: #ffd700; }
-  .form-input::placeholder { color: rgba(255,215,0,0.3); }
-  .form-file-label { display: flex; align-items: center; justify-content: center; width: 100%; padding: 30px 14px; background: rgba(0,0,0,0.4); border: 2px dashed rgba(255,215,0,0.3); border-radius: 12px; color: rgba(255,215,0,0.6); font-size: 0.95rem; cursor: pointer; transition: all 0.3s; text-align: center; flex-direction: column; gap: 8px; }
-  .form-file-label:hover { border-color: #ffd700; color: #ffd700; }
-  .form-file-label.has-file { border-color: #44cc44; color: #44cc44; border-style: solid; padding: 15px; }
-  .form-file-label .upload-icon { font-size: 2rem; }
-  .photo-preview { max-width: 100%; max-height: 150px; border-radius: 8px; margin-top: 8px; display: none; object-fit: cover; }
-  .form-file-input { display: none; }
-  .form-select { width: 100%; padding: 12px 14px; background: rgba(0,0,0,0.4); border: 1.5px solid rgba(255,215,0,0.3); border-radius: 10px; color: #ffd700; font-family: 'Noto Serif TC',serif; font-size: 1rem; outline: none; }
-  .form-select option { background: #1a0a0a; color: #ffd700; }
-  .btn-generate { width: 100%; padding: 14px; background: linear-gradient(135deg,#cc0000,#aa0000); color: #ffd700; border: 2px solid #ffd700; border-radius: 30px; font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: 1.15rem; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
-  .btn-generate:hover { transform: scale(1.02); }
-  .btn-generate:active { transform: scale(0.98); }
-  .link-result { display: none; margin-top: 20px; padding: 18px; background: rgba(0,80,0,0.2); border: 1.5px solid #44cc44; border-radius: 12px; text-align: center; }
-  .link-result-title { color: #44cc44; font-size: 0.95rem; margin-bottom: 10px; }
-  .link-display { word-break: break-all; font-size: 0.7rem; color: #aaddaa; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; max-height: 80px; overflow-y: auto; margin-bottom: 12px; line-height: 1.4; }
-  .btn-copy-link { padding: 10px 30px; background: #44cc44; color: #000; border: none; border-radius: 20px; font-family: 'Noto Serif TC',serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
-  .btn-preview { padding: 10px 30px; background: transparent; color: #ffd700; border: 1.5px solid #ffd700; border-radius: 20px; font-family: 'Noto Serif TC',serif; font-size: 0.95rem; cursor: pointer; margin-left: 8px; }
-  .link-warning { font-size: 0.75rem; color: #cc8888; margin-top: 10px; }
+/* CREATOR */
+.creator-card{background:rgba(40,10,10,.9);border:2px solid #ffd700;border-radius:20px;padding:30px 25px;width:min(90vw,420px);box-shadow:0 0 40px rgba(255,215,0,.15)}
+.creator-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.4rem,5vw,2rem);text-align:center;margin-bottom:5px;text-shadow:0 0 15px rgba(255,215,0,.4)}
+.creator-subtitle{font-size:.85rem;color:#cc9999;text-align:center;margin-bottom:25px}
+.form-group{margin-bottom:18px}.form-label{display:block;font-size:.9rem;color:#ffcc88;margin-bottom:6px}
+.form-input{width:100%;padding:12px 14px;background:rgba(0,0,0,.4);border:1.5px solid rgba(255,215,0,.3);border-radius:10px;color:#ffd700;font-family:'Noto Serif TC',serif;font-size:1rem;outline:none}.form-input:focus{border-color:#ffd700}.form-input::placeholder{color:rgba(255,215,0,.3)}
+.form-file-label{display:flex;align-items:center;justify-content:center;width:100%;padding:30px 14px;background:rgba(0,0,0,.4);border:2px dashed rgba(255,215,0,.3);border-radius:12px;color:rgba(255,215,0,.6);font-size:.95rem;cursor:pointer;text-align:center;flex-direction:column;gap:8px}.form-file-label:hover{border-color:#ffd700;color:#ffd700}.form-file-label.has-file{border-color:#44cc44;color:#44cc44;border-style:solid;padding:15px}
+.upload-icon{font-size:2rem}.photo-preview{max-width:100%;max-height:150px;border-radius:8px;margin-top:8px;display:none;object-fit:cover}.form-file-input{display:none}
+.form-select{width:100%;padding:12px 14px;background:rgba(0,0,0,.4);border:1.5px solid rgba(255,215,0,.3);border-radius:10px;color:#ffd700;font-family:'Noto Serif TC',serif;font-size:1rem;outline:none}.form-select option{background:#1a0a0a;color:#ffd700}
+.btn-generate{width:100%;padding:14px;background:linear-gradient(135deg,#cc0000,#aa0000);color:#ffd700;border:2px solid #ffd700;border-radius:30px;font-family:'ZCOOL KuaiLe',serif;font-size:1.15rem;cursor:pointer;margin-top:10px}
+.link-result{display:none;margin-top:20px;padding:18px;background:rgba(0,80,0,.2);border:1.5px solid #44cc44;border-radius:12px;text-align:center}.link-result-title{color:#44cc44;font-size:.95rem;margin-bottom:10px}
+.link-display{word-break:break-all;font-size:.7rem;color:#aaddaa;background:rgba(0,0,0,.3);padding:10px;border-radius:6px;max-height:80px;overflow-y:auto;margin-bottom:12px}
+.btn-copy-link{padding:10px 30px;background:#44cc44;color:#000;border:none;border-radius:20px;font-family:'Noto Serif TC',serif;font-size:.95rem;font-weight:700;cursor:pointer}
+.btn-preview{padding:10px 30px;background:transparent;color:#ffd700;border:1.5px solid #ffd700;border-radius:20px;font-family:'Noto Serif TC',serif;font-size:.95rem;cursor:pointer;margin-left:8px}
+.link-warning{font-size:.75rem;color:#cc8888;margin-top:10px}
 
-  /* INTRO */
-  .intro-title { font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(2rem,8vw,4rem); color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); text-align: center; margin-bottom: 10px; animation: titleGlow 2s ease-in-out infinite alternate; }
-  @keyframes titleGlow { from { text-shadow: 0 0 20px rgba(255,215,0,0.5); } to { text-shadow: 0 0 40px rgba(255,215,0,0.8), 0 0 80px rgba(255,215,0,0.3); } }
-  .intro-subtitle { font-size: clamp(0.9rem,3vw,1.2rem); color: #ffaaaa; margin-bottom: 40px; text-align: center; opacity: 0.8; }
-  .intro-envelope { font-size: 100px; animation: bounce 2s ease-in-out infinite; cursor: pointer; filter: drop-shadow(0 10px 30px rgba(255,0,0,0.3)); transition: transform 0.3s; }
-  .intro-envelope:hover { transform: scale(1.1); }
-  .intro-envelope:active { transform: scale(0.95); }
-  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-  .intro-hint { margin-top: 30px; font-size: 0.9rem; color: #cc8888; animation: fadeInOut 2s ease-in-out infinite; }
-  @keyframes fadeInOut { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+/* INTRO */
+.intro-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(2rem,8vw,4rem);text-shadow:0 0 20px rgba(255,215,0,.5);text-align:center;margin-bottom:10px;animation:glow 2s ease-in-out infinite alternate}
+@keyframes glow{from{text-shadow:0 0 20px rgba(255,215,0,.5)}to{text-shadow:0 0 40px rgba(255,215,0,.8),0 0 80px rgba(255,215,0,.3)}}
+.intro-subtitle{font-size:clamp(.9rem,3vw,1.2rem);color:#ffaaaa;margin-bottom:40px;text-align:center;opacity:.8}
+.intro-envelope{font-size:100px;animation:bounce 2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(255,0,0,.3))}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.intro-hint{margin-top:30px;font-size:.9rem;color:#cc8888;animation:fade 2s ease-in-out infinite}
+@keyframes fade{0%,100%{opacity:.4}50%{opacity:1}}
 
-  /* PUZZLE */
-  #puzzle-screen { padding: 15px; }
-  .puzzle-header { font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(1.2rem,5vw,1.8rem); color: #ffd700; margin-bottom: 10px; text-align: center; }
-  .puzzle-container { position: relative; width: min(85vw,400px); height: min(85vw,400px); margin: 0 auto; border: 3px solid #ffd700; border-radius: 8px; overflow: hidden; box-shadow: 0 0 30px rgba(255,215,0,0.2); background: #111; }
-  .puzzle-piece { position: absolute; cursor: grab; border: 1px solid rgba(255,215,0,0.15); z-index: 1; }
-  .puzzle-piece:active { cursor: grabbing; z-index: 10; box-shadow: 0 0 20px rgba(255,215,0,0.5); }
-  .puzzle-piece.correct { border-color: rgba(0,255,0,0.3); pointer-events: none; }
-  .puzzle-ref { width: min(22vw,90px); height: min(22vw,90px); position: absolute; top: 8px; right: 8px; border: 2px solid #ffd700; border-radius: 6px; opacity: 0.7; z-index: 20; object-fit: cover; }
-  .puzzle-progress { margin-top: 12px; font-size: 0.85rem; color: #ffaaaa; }
-  .puzzle-progress-bar { width: min(85vw,400px); height: 6px; background: #333; border-radius: 3px; margin-top: 6px; overflow: hidden; }
-  .puzzle-progress-fill { height: 100%; background: linear-gradient(90deg,#ff4444,#ffd700); border-radius: 3px; transition: width 0.3s; width: 0%; }
-  .btn-shuffle { margin-top: 15px; padding: 10px 30px; background: linear-gradient(135deg,#cc0000,#aa0000); color: #ffd700; border: 2px solid #ffd700; border-radius: 30px; font-family: 'Noto Serif TC',serif; font-size: 1rem; cursor: pointer; }
+/* PUZZLE */
+#puzzle-screen{padding:15px}
+.puzzle-header{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,5vw,1.8rem);margin-bottom:10px;text-align:center}
+.puzzle-area{position:relative;margin:0 auto}
+.puzzle-board{position:relative;border:3px solid #ffd700;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,.2);background:rgba(0,0,0,.3);overflow:hidden}
+.puzzle-piece-cv{position:absolute;cursor:grab;z-index:1;transition:filter .2s}
+.puzzle-piece-cv:active{cursor:grabbing;z-index:10}
+.puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important}
+.puzzle-ref{position:absolute;top:8px;right:8px;border:2px solid #ffd700;border-radius:6px;opacity:.7;z-index:20;object-fit:cover}
+.puzzle-progress{margin-top:12px;font-size:.85rem;color:#ffaaaa}
+.puzzle-progress-bar{height:6px;background:#333;border-radius:3px;margin-top:6px;overflow:hidden}
+.puzzle-progress-fill{height:100%;background:linear-gradient(90deg,#ff4444,#ffd700);border-radius:3px;transition:width .3s;width:0%}
+.btn-shuffle{margin-top:15px;padding:10px 30px;background:linear-gradient(135deg,#cc0000,#aa0000);color:#ffd700;border:2px solid #ffd700;border-radius:30px;font-family:'Noto Serif TC',serif;font-size:1rem;cursor:pointer}
 
-  /* SCRATCH */
-  .congrats-text { font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(1.5rem,7vw,2.5rem); color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.6); text-align: center; margin-bottom: 8px; animation: titleGlow 2s ease-in-out infinite alternate; }
-  .congrats-sub { font-size: clamp(0.9rem,3vw,1.1rem); color: #ffaaaa; margin-bottom: 25px; text-align: center; }
-  .scratch-wrapper { position: relative; width: min(80vw,320px); height: min(50vw,200px); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(255,0,0,0.3); border: 3px solid #ffd700; }
-  .scratch-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg,#fff5e6,#fff0d0); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-  .prize-icon { font-size: 50px; margin-bottom: 8px; }
-  .prize-text { font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(1rem,4vw,1.4rem); color: #cc0000; text-align: center; font-weight: 900; }
-  .scratch-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; touch-action: none; }
-  .scratch-hint { margin-top: 20px; font-size: 0.9rem; color: #ffaaaa; animation: fadeInOut 2s ease-in-out infinite; }
+/* SCRATCH */
+.congrats-text{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.5rem,7vw,2.5rem);text-shadow:0 0 30px rgba(255,215,0,.6);text-align:center;margin-bottom:8px;animation:glow 2s ease-in-out infinite alternate}
+.congrats-sub{font-size:clamp(.9rem,3vw,1.1rem);color:#ffaaaa;margin-bottom:25px;text-align:center}
+.scratch-wrapper{position:relative;width:min(80vw,320px);height:min(50vw,200px);border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(255,0,0,.3);border:3px solid #ffd700}
+.scratch-bg{position:absolute;inset:0;background:linear-gradient(135deg,#fff5e6,#fff0d0);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.prize-icon{font-size:50px;margin-bottom:8px}
+.prize-text{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1rem,4vw,1.4rem);color:#cc0000;text-align:center;font-weight:900}
+.scratch-canvas{position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;touch-action:none}
+.scratch-hint{margin-top:20px;font-size:.9rem;color:#ffaaaa;animation:fade 2s ease-in-out infinite}
 
-  /* PRIZE */
-  .prize-reveal { text-align: center; animation: prizeAppear 0.8s ease-out; }
-  @keyframes prizeAppear { from { opacity: 0; transform: scale(0.5) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-  .prize-big-icon { font-size: 80px; animation: bounce 1.5s ease-in-out infinite; }
-  .prize-title { font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(1.8rem,8vw,3rem); color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.6); margin: 15px 0 8px; }
-  .prize-desc { font-size: clamp(0.9rem,3vw,1.1rem); color: #ffcccc; margin-bottom: 25px; }
-  .btn-claim { padding: 16px 50px; background: linear-gradient(135deg,#ff1a1a,#cc0000); color: #ffd700; border: 3px solid #ffd700; border-radius: 40px; font-family: 'ZCOOL KuaiLe','Noto Serif TC',serif; font-size: clamp(1.2rem,4vw,1.5rem); cursor: pointer; box-shadow: 0 4px 20px rgba(255,0,0,0.4); animation: pulseBtn 2s ease-in-out infinite; position: relative; overflow: hidden; }
-  .btn-claim:active { transform: scale(0.98); }
-  @keyframes pulseBtn { 0%,100% { box-shadow: 0 4px 20px rgba(255,0,0,0.4); } 50% { box-shadow: 0 4px 30px rgba(255,0,0,0.6), 0 0 60px rgba(255,215,0,0.4); } }
-  .btn-claim::after { content: ''; position: absolute; top: -50%; left: -60%; width: 40%; height: 200%; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); animation: shimmer 2.5s infinite; }
-  @keyframes shimmer { 0% { left: -60%; } 100% { left: 120%; } }
-  .manual-code { margin-top: 20px; font-size: 0.8rem; color: #aa8888; text-align: center; }
-  .manual-code span { display: inline-block; background: rgba(255,215,0,0.1); padding: 4px 12px; border-radius: 4px; font-family: monospace; color: #ffd700; margin-top: 4px; letter-spacing: 1px; user-select: all; }
-  .btn-make-own { margin-top: 35px; padding: 10px 24px; background: transparent; color: #aa8888; border: 1px solid #aa8888; border-radius: 20px; font-family: 'Noto Serif TC',serif; font-size: 0.8rem; cursor: pointer; }
-  .btn-make-own:hover { color: #ffd700; border-color: #ffd700; }
+/* PRIZE */
+.prize-reveal{text-align:center;animation:pa .8s ease-out}
+@keyframes pa{from{opacity:0;transform:scale(.5) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.prize-big-icon{font-size:80px;animation:bounce 1.5s ease-in-out infinite}
+.prize-title{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.8rem,8vw,3rem);text-shadow:0 0 30px rgba(255,215,0,.6);margin:15px 0 8px}
+.prize-desc{font-size:clamp(.9rem,3vw,1.1rem);color:#ffcccc;margin-bottom:25px}
+.btn-claim{padding:16px 50px;background:linear-gradient(135deg,#ff1a1a,#cc0000);color:#ffd700;border:3px solid #ffd700;border-radius:40px;font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,4vw,1.5rem);cursor:pointer;box-shadow:0 4px 20px rgba(255,0,0,.4);animation:pulse 2s ease-in-out infinite;position:relative;overflow:hidden}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(255,0,0,.4)}50%{box-shadow:0 4px 30px rgba(255,0,0,.6),0 0 60px rgba(255,215,0,.4)}}
+.btn-claim::after{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2.5s infinite}
+@keyframes shimmer{0%{left:-60%}100%{left:120%}}
+.manual-code{margin-top:20px;font-size:.8rem;color:#aa8888;text-align:center}
+.manual-code span{display:inline-block;background:rgba(255,215,0,.1);padding:4px 12px;border-radius:4px;font-family:monospace;color:#ffd700;margin-top:4px;letter-spacing:1px;user-select:all}
+.btn-make-own{margin-top:35px;padding:10px 24px;background:transparent;color:#aa8888;border:1px solid #aa8888;border-radius:20px;font-family:'Noto Serif TC',serif;font-size:.8rem;cursor:pointer}.btn-make-own:hover{color:#ffd700;border-color:#ffd700}
 
-  /* EFFECTS */
-  .coin-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 100; overflow: hidden; }
-  .coin { position: absolute; top: -50px; animation: coinFall linear forwards; pointer-events: none; }
-  @keyframes coinFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-  .firework { position: fixed; pointer-events: none; z-index: 99; }
-  .firework-particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; animation: fireworkBurst 1s ease-out forwards; }
-  @keyframes fireworkBurst { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx),var(--ty)) scale(0); opacity: 0; } }
-  .copied-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); background: rgba(0,0,0,0.93); color: #ffd700; padding: 24px 40px; border-radius: 16px; font-size: 1.2rem; border: 2px solid #ffd700; z-index: 9999; transition: transform 0.3s; text-align: center; }
-  .copied-toast.show { transform: translate(-50%,-50%) scale(1); }
-  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; color: #ffd700; font-size: 1.1rem; flex-direction: column; gap: 15px; }
-  .loading-overlay.show { display: flex; }
-  .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,215,0,0.2); border-top-color: #ffd700; border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 380px) { .puzzle-container { width: 90vw; height: 90vw; } .scratch-wrapper { width: 88vw; height: 55vw; } .creator-card { padding: 20px 16px; } }
+/* EFFECTS */
+.coin-container{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.coin{position:absolute;top:-50px;animation:cf linear forwards;pointer-events:none}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}80%{opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.firework{position:fixed;pointer-events:none;z-index:99}
+.firework-particle{position:absolute;width:4px;height:4px;border-radius:50%;animation:fb 1s ease-out forwards}
+@keyframes fb{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+.copied-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.93);color:#ffd700;padding:24px 40px;border-radius:16px;font-size:1.2rem;border:2px solid #ffd700;z-index:9999;transition:transform .3s;text-align:center}.copied-toast.show{transform:translate(-50%,-50%) scale(1)}
+.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:9999;color:#ffd700;font-size:1.1rem;flex-direction:column;gap:15px}.loading-overlay.show{display:flex}
+.loading-spinner{width:40px;height:40px;border:3px solid rgba(255,215,0,.2);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -149,7 +128,7 @@
       <div class="link-result-title">✅ 連結產生成功！傳給對方就能玩</div>
       <div class="link-display" id="link-display"></div>
       <div><button class="btn-copy-link" id="btn-copy-link">📋 複製連結</button><button class="btn-preview" id="btn-preview">👀 預覽</button></div>
-      <div class="link-warning">⚠️ 連結包含照片資料，若太長可試較小的照片</div>
+      <div class="link-warning"></div>
     </div>
   </div>
 </div>
@@ -165,9 +144,12 @@
 <!-- PUZZLE -->
 <div id="puzzle-screen" class="screen">
   <div class="puzzle-header">🧩 拼出新年好運</div>
-  <div class="puzzle-container" id="puzzle-container"><img class="puzzle-ref" id="puzzle-ref" alt="參考圖"></div>
+  <div class="puzzle-area" id="puzzle-area">
+    <div class="puzzle-board" id="puzzle-board"></div>
+    <img class="puzzle-ref" id="puzzle-ref" alt="參考圖">
+  </div>
   <div class="puzzle-progress">已完成 <span id="progress-count">0</span> / <span id="progress-total">16</span> 片</div>
-  <div class="puzzle-progress-bar"><div class="puzzle-progress-fill" id="progress-fill"></div></div>
+  <div class="puzzle-progress-bar" id="progress-bar"><div class="puzzle-progress-fill" id="progress-fill"></div></div>
   <button class="btn-shuffle" id="btn-shuffle">🔀 重新打亂</button>
 </div>
 
@@ -196,99 +178,55 @@
 
 <div class="copied-toast" id="copied-toast"></div>
 <div class="coin-container" id="coin-container"></div>
-<div class="loading-overlay" id="loading-overlay"><div class="loading-spinner"></div><div>正在產生連結...</div></div>
+<div class="loading-overlay" id="loading-overlay"><div class="loading-spinner"></div><div>正在上傳照片...</div></div>
 
 <script>
-// ★★★ 把你的 ImgBB API Key 貼在這裡 ★★★
-const IMGBB_API_KEY = 'f3b38ce5bec9cb00a5ee4c5bf768ad2a';
-
+// ===== CONFIG =====
+const IMGBB_API_KEY='f3b38ce5bec9cb00a5ee4c5bf768ad2a';
 const GIFT_TYPES={ubereats:{emoji:'🍔',label:'恭喜獲得<br>Uber Eats 美食禮物卡！',btn:'🍔 領取 Uber Eats 禮物卡',url:'https://www.ubereats.com'},starbucks:{emoji:'☕',label:'恭喜獲得<br>星巴克禮物卡！',btn:'☕ 領取星巴克禮物卡',url:'https://www.starbucks.com.tw'},foodpanda:{emoji:'🐼',label:'恭喜獲得<br>foodpanda 美食禮物卡！',btn:'🐼 領取 foodpanda 禮物卡',url:'https://www.foodpanda.com.tw'},momo:{emoji:'🛒',label:'恭喜獲得<br>momo 購物金！',btn:'🛒 領取 momo 購物金',url:'https://www.momoshop.com.tw'},custom:{emoji:'🎁',label:'恭喜獲得<br>神秘禮物！',btn:'🎁 領取禮物',url:''}};
-
 let CONFIG={puzzleImage:'',giftCode:'',greeting:'恭喜發財，大吉大利',giftType:'ubereats',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000};
 
-// AUDIO
+// ===== AUDIO =====
 let audioCtx=null;
 function ac(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-function playCoinSound(){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.setValueAtTime(1200,c.currentTime);o.frequency.exponentialRampToValueAtTime(2400,c.currentTime+0.1);g.gain.setValueAtTime(0.3,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.3);o.start(c.currentTime);o.stop(c.currentTime+0.3);}catch(e){}}
-function playWinSound(){try{const c=ac();[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0.25,c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+i*0.15+0.5);o.start(c.currentTime+i*0.15);o.stop(c.currentTime+i*0.15+0.5);});}catch(e){}}
-function playJackpotSound(){try{const c=ac();[523,587,659,784,880,1047,1175,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;g.gain.setValueAtTime(0.15,c.currentTime+i*0.1);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+i*0.1+0.4);o.start(c.currentTime+i*0.1);o.stop(c.currentTime+i*0.1+0.4);});[1047,1319,1568].forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.value=f;const t=c.currentTime+0.85;g.gain.setValueAtTime(0.2,t);g.gain.exponentialRampToValueAtTime(0.01,t+1.5);o.start(t);o.stop(t+1.5);});}catch(e){}}
-function playScratchSound(){try{const c=ac(),b=c.createBuffer(1,c.sampleRate*0.05,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const g=c.createGain();g.gain.value=0.05;const fl=c.createBiquadFilter();fl.type='bandpass';fl.frequency.value=3000;s.connect(fl);fl.connect(g);g.connect(c.destination);s.start();}catch(e){}}
+function playCoinSound(){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.setValueAtTime(1200,c.currentTime);o.frequency.exponentialRampToValueAtTime(2400,c.currentTime+.1);g.gain.setValueAtTime(.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.01,c.currentTime+.3);o.start();o.stop(c.currentTime+.3);}catch(e){}}
+function playWinSound(){try{const c=ac();[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.25,c.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.01,c.currentTime+i*.15+.5);o.start(c.currentTime+i*.15);o.stop(c.currentTime+i*.15+.5);});}catch(e){}}
+function playJackpotSound(){try{const c=ac();[523,587,659,784,880,1047,1175,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;g.gain.setValueAtTime(.15,c.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.01,c.currentTime+i*.1+.4);o.start(c.currentTime+i*.1);o.stop(c.currentTime+i*.1+.4);});[1047,1319,1568].forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.value=f;const t=c.currentTime+.85;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.01,t+1.5);o.start(t);o.stop(t+1.5);});}catch(e){}}
+function playScratchSound(){try{const c=ac(),b=c.createBuffer(1,c.sampleRate*.05,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const g=c.createGain();g.gain.value=.05;const fl=c.createBiquadFilter();fl.type='bandpass';fl.frequency.value=3000;s.connect(fl);fl.connect(g);g.connect(c.destination);s.start();}catch(e){}}
 
-// EFFECTS
+// ===== EFFECTS =====
 function spawnCoins(n=30,dur=3000){const co=document.getElementById('coin-container'),em=['🪙','💰','🧧','✨','🎊','💵'];for(let i=0;i<n;i++){setTimeout(()=>{const c=document.createElement('div');c.className='coin';c.textContent=em[Math.floor(Math.random()*em.length)];c.style.left=Math.random()*100+'vw';c.style.fontSize=(20+Math.random()*25)+'px';const d=2+Math.random()*2;c.style.animationDuration=d+'s';co.appendChild(c);setTimeout(()=>c.remove(),d*1000);},Math.random()*dur);}}
 function spawnFirework(x,y){const cl=['#ffd700','#ff4444','#ff8800','#ffaaaa','#fff'],el=document.createElement('div');el.className='firework';el.style.left=x+'px';el.style.top=y+'px';document.body.appendChild(el);for(let i=0;i<20;i++){const p=document.createElement('div');p.className='firework-particle';const a=Math.PI*2*i/20,d=50+Math.random()*80;p.style.setProperty('--tx',Math.cos(a)*d+'px');p.style.setProperty('--ty',Math.sin(a)*d+'px');p.style.background=cl[Math.floor(Math.random()*cl.length)];el.appendChild(p);}setTimeout(()=>el.remove(),1200);}
-function fireMultipleFireworks(){for(let i=0;i<6;i++)setTimeout(()=>spawnFirework(Math.random()*innerWidth,Math.random()*innerHeight*0.6),i*350);}
+function fireMultipleFireworks(){for(let i=0;i<6;i++)setTimeout(()=>spawnFirework(Math.random()*innerWidth,Math.random()*innerHeight*.6),i*350);}
 
+// ===== UTILS =====
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function showToast(msg){const t=document.getElementById('copied-toast');t.innerHTML=msg.replace(/\n/g,'<br>');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-// IMAGE COMPRESS (for faster upload)
-function compressImage(file,maxW=600,q=0.7){return new Promise(r=>{const rd=new FileReader();rd.onload=e=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');let w=img.width,h=img.height;if(w>h){if(w>maxW){h=maxW/w*h;w=maxW;}}else{if(h>maxW){w=maxW/h*w;h=maxW;}}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cv.toBlob(blob=>r(blob),'image/jpeg',q);};img.src=e.target.result;};rd.readAsDataURL(file);});}
+// ===== IMGBB =====
+function compressImage(file,maxW=600,q=0.7){return new Promise(r=>{const rd=new FileReader();rd.onload=e=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');let w=img.width,h=img.height;if(Math.max(w,h)>maxW){if(w>h){h=maxW/w*h;w=maxW;}else{w=maxW/h*w;h=maxW;}}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cv.toBlob(blob=>r(blob),'image/jpeg',q);};img.src=e.target.result;};rd.readAsDataURL(file);});}
 
-// IMGBB UPLOAD (7 days = 604800 seconds)
 async function uploadToImgBB(blob){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
     reader.onload=async function(){
       try{
         const base64=reader.result.split(',')[1];
-        const url='https://api.imgbb.com/1/upload?key='+IMGBB_API_KEY+'&expiration=604800';
-        
-        // Method 1: FormData with base64
-        const fd=new FormData();
-        fd.append('image',base64);
-        
-        const res=await fetch(url,{
-          method:'POST',
-          body:fd
-        });
-        
-        if(!res.ok){
-          reject(new Error('HTTP錯誤 '+res.status));
-          return;
-        }
-        
+        const fd=new FormData();fd.append('image',base64);
+        const res=await fetch('https://api.imgbb.com/1/upload?key='+IMGBB_API_KEY+'&expiration=604800',{method:'POST',body:fd});
+        if(!res.ok){reject(new Error('HTTP '+res.status));return;}
         const data=await res.json();
-        
-        if(!data.success){
-          reject(new Error(JSON.stringify(data.error||data)));
-          return;
-        }
-        
+        if(!data.success){reject(new Error(JSON.stringify(data.error||data)));return;}
         resolve(data.data.display_url);
-      }catch(e){
-        reject(new Error('網路錯誤: '+e.message));
-      }
-    };
-    reader.onerror=()=>reject(new Error('讀取檔案失敗'));
-    reader.readAsDataURL(blob);
+      }catch(e){reject(new Error('網路錯誤: '+e.message));}
+    };reader.onerror=()=>reject(new Error('讀取失敗'));reader.readAsDataURL(blob);
   });
 }
 
-// URL ENCODE/DECODE (short params only, no image data)
-function buildUrl(imageUrl,code,greeting,type,size){
-  const params=new URLSearchParams();
-  params.set('p',imageUrl);
-  params.set('c',code);
-  params.set('g',greeting);
-  params.set('t',type);
-  params.set('s',size);
-  return location.origin+location.pathname+'?'+params.toString();
-}
+function buildUrl(imageUrl,code,greeting,type,size){const p=new URLSearchParams();p.set('p',imageUrl);p.set('c',code);p.set('g',greeting);p.set('t',type);p.set('s',size);return location.origin+location.pathname+'?'+p.toString();}
+function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'恭喜發財，大吉大利',giftType:p.get('t')||'ubereats',puzzleSize:parseInt(p.get('s'))||4};}
 
-function readUrlParams(){
-  const params=new URLSearchParams(location.search);
-  if(!params.get('p'))return null;
-  return{
-    puzzleImage:params.get('p'),
-    giftCode:params.get('c')||'',
-    greeting:params.get('g')||'恭喜發財，大吉大利',
-    giftType:params.get('t')||'ubereats',
-    puzzleSize:parseInt(params.get('s'))||4
-  };
-}
-
-// CREATOR
+// ===== CREATOR =====
 let selectedFile=null;
 document.getElementById('file-label').addEventListener('click',()=>document.getElementById('photo-input').click());
 document.getElementById('photo-input').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;selectedFile=f;document.getElementById('file-label').classList.add('has-file');document.getElementById('file-label-text').textContent='✅ '+f.name;const rd=new FileReader();rd.onload=ev=>{const p=document.getElementById('photo-preview');p.src=ev.target.result;p.style.display='block';};rd.readAsDataURL(f);});
@@ -300,7 +238,6 @@ document.getElementById('btn-generate').addEventListener('click',async()=>{
   const greeting=document.getElementById('greeting-input').value.trim()||'恭喜發財，大吉大利';
   const type=document.getElementById('gift-type-select').value;
   const size=parseInt(document.getElementById('difficulty-select').value);
-  
   document.getElementById('loading-overlay').classList.add('show');
   try{
     const blob=await compressImage(selectedFile);
@@ -310,60 +247,255 @@ document.getElementById('btn-generate').addEventListener('click',async()=>{
     document.getElementById('link-result').style.display='block';
     document.querySelector('.link-warning').textContent='📸 照片會在 7 天後自動刪除，請確保對方在期限內打開';
     document.querySelector('.link-warning').style.color='#ffcc88';
-  }catch(err){
-    showToast('❌ '+err.message);
-    console.error('Upload error:',err);
-  }
+  }catch(err){showToast('❌ '+err.message);console.error(err);}
   document.getElementById('loading-overlay').classList.remove('show');
 });
 
 document.getElementById('btn-copy-link').addEventListener('click',async()=>{const u=document.getElementById('link-display').textContent;try{await navigator.clipboard.writeText(u);}catch{const t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 連結已複製！\n傳給對方就能玩');});
 document.getElementById('btn-preview').addEventListener('click',()=>window.open(document.getElementById('link-display').textContent,'_blank'));
 
-// INIT
+// ===== INIT =====
 function init(){const d=readUrlParams();if(d){CONFIG={...CONFIG,...d};setupPlayer();return;}showScreen('creator-screen');}
+function setupPlayer(){const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.ubereats;document.getElementById('greeting-text').textContent=CONFIG.greeting;document.getElementById('prize-emoji').textContent=g.emoji;document.getElementById('prize-label').innerHTML=g.label;document.getElementById('btn-claim').textContent=g.btn;document.getElementById('manual-code-display').textContent=CONFIG.giftCode;showScreen('intro-screen');}
 
-function setupPlayer(){const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.ubereats;document.getElementById('greeting-text').textContent=CONFIG.greeting;document.getElementById('puzzle-ref').src=CONFIG.puzzleImage;document.getElementById('progress-total').textContent=CONFIG.puzzleSize*CONFIG.puzzleSize;document.getElementById('prize-emoji').textContent=g.emoji;document.getElementById('prize-label').innerHTML=g.label;document.getElementById('btn-claim').textContent=g.btn;document.getElementById('manual-code-display').textContent=CONFIG.giftCode;showScreen('intro-screen');}
+// ===== INTRO =====
+document.getElementById('start-btn').addEventListener('click',()=>{playCoinSound();showScreen('puzzle-screen');loadAndInitPuzzle();});
 
-// INTRO
-document.getElementById('start-btn').addEventListener('click',()=>{playCoinSound();showScreen('puzzle-screen');initPuzzle();});
+// ===== PUZZLE ENGINE (auto-ratio, no overlap, jigsaw edges) =====
+let puzzlePieces=[],correctCount=0,totalPieces=0;
+let puzzleImg=null,cols=0,rows=0,cellW=0,cellH=0,boardW=0,boardH=0,tabSize=0;
+// Edge map: 1=tab out, -1=blank in, 0=flat (border)
+let edgesH=[],edgesV=[];
 
-// PUZZLE
-let pieces=[],correctCount=0;
-function initPuzzle(){const c=document.getElementById('puzzle-container'),sz=CONFIG.puzzleSize,cs=c.offsetWidth,pw=cs/sz,ph=cs/sz,tp=sz*sz;c.querySelectorAll('.puzzle-piece').forEach(p=>p.remove());pieces=[];correctCount=0;updateProgress(tp);
-for(let r=0;r<sz;r++)for(let cl=0;cl<sz;cl++){const p=document.createElement('div');p.className='puzzle-piece';p.style.width=pw+'px';p.style.height=ph+'px';p.style.backgroundImage=`url('${CONFIG.puzzleImage}')`;p.style.backgroundPosition=`${-cl*pw}px ${-r*ph}px`;p.style.backgroundSize=`${cs}px ${cs}px`;p.dataset.correctX=cl*pw;p.dataset.correctY=r*ph;pieces.push(p);c.appendChild(p);}
-shufflePieces(cs,pw,ph,sz);setupDrag(c,pw,ph,cs,tp);}
+function loadAndInitPuzzle(){
+  puzzleImg=new Image();
+  puzzleImg.crossOrigin='anonymous';
+  puzzleImg.onload=()=>{
+    const sz=CONFIG.puzzleSize;
+    const ratio=puzzleImg.width/puzzleImg.height;
+    // Determine cols x rows based on ratio
+    if(ratio>1.4){cols=sz+1;rows=sz-1;}      // wide (16:9 etc)
+    else if(ratio>1.1){cols=sz;rows=sz-1;}    // 4:3
+    else if(ratio<0.7){cols=sz-1;rows=sz+1;}  // tall portrait
+    else if(ratio<0.9){cols=sz-1;rows=sz;}    // portrait 3:4
+    else{cols=sz;rows=sz;}                     // square-ish
+    if(cols<2)cols=2;if(rows<2)rows=2;
+    totalPieces=cols*rows;
 
-function shufflePieces(cs,pw,ph,sz){correctCount=0;pieces.forEach(p=>{p.classList.remove('correct');p.style.pointerEvents='';p.style.left=Math.floor(Math.random()*sz)*pw+'px';p.style.top=Math.floor(Math.random()*sz)*ph+'px';});updateProgress(sz*sz);}
+    // Board dimensions to fit screen
+    const maxW=Math.min(window.innerWidth*.88,420);
+    const maxH=Math.min(window.innerHeight*.55,420);
+    const imgRatio=puzzleImg.width/puzzleImg.height;
+    if(maxW/maxH > imgRatio){boardH=maxH;boardW=boardH*imgRatio;}
+    else{boardW=maxW;boardH=boardW/imgRatio;}
+    boardW=Math.floor(boardW);boardH=Math.floor(boardH);
 
-function setupDrag(container,pw,ph,cs,tp){let dr=null,ox,oy;
-function onS(e){const t=e.target.closest('.puzzle-piece');if(!t||t.classList.contains('correct'))return;dr=t;dr.style.zIndex=10;const r=container.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;ox=cx-r.left-parseFloat(dr.style.left);oy=cy-r.top-parseFloat(dr.style.top);e.preventDefault();}
-function onM(e){if(!dr)return;const r=container.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;dr.style.left=Math.max(0,Math.min(cx-r.left-ox,cs-pw))+'px';dr.style.top=Math.max(0,Math.min(cy-r.top-oy,cs-ph))+'px';e.preventDefault();}
-function onE(){if(!dr)return;const sx=Math.round(parseFloat(dr.style.left)/pw)*pw,sy=Math.round(parseFloat(dr.style.top)/ph)*ph;dr.style.left=sx+'px';dr.style.top=sy+'px';dr.style.zIndex=1;const cx=parseFloat(dr.dataset.correctX),cy=parseFloat(dr.dataset.correctY);if(Math.abs(sx-cx)<2&&Math.abs(sy-cy)<2){dr.classList.add('correct');dr.style.left=cx+'px';dr.style.top=cy+'px';playCoinSound();correctCount++;updateProgress(tp);if(correctCount>=tp)onPuzzleComplete();}dr=null;}
-container.addEventListener('mousedown',onS);container.addEventListener('mousemove',onM);container.addEventListener('mouseup',onE);container.addEventListener('touchstart',onS,{passive:false});container.addEventListener('touchmove',onM,{passive:false});container.addEventListener('touchend',onE);}
+    cellW=boardW/cols;cellH=boardH/rows;
+    tabSize=Math.min(cellW,cellH)*0.18;
 
-function updateProgress(t){document.getElementById('progress-count').textContent=correctCount;document.getElementById('progress-fill').style.width=(correctCount/t*100)+'%';}
+    // Generate edge map (random tabs/blanks)
+    edgesH=[];edgesV=[];
+    for(let r=0;r<=rows;r++){edgesH[r]=[];for(let c=0;c<cols;c++)edgesH[r][c]=(r===0||r===rows)?0:(Math.random()>.5?1:-1);}
+    for(let r=0;r<rows;r++){edgesV[r]=[];for(let c=0;c<=cols;c++)edgesV[r][c]=(c===0||c===cols)?0:(Math.random()>.5?1:-1);}
+
+    // Setup board
+    const board=document.getElementById('puzzle-board');
+    board.style.width=boardW+'px';board.style.height=boardH+'px';
+    board.innerHTML='';
+
+    const area=document.getElementById('puzzle-area');
+    area.style.width=boardW+'px';
+
+    // Ref image
+    const ref=document.getElementById('puzzle-ref');
+    ref.src=CONFIG.puzzleImage;
+    ref.style.width=Math.min(boardW*.22,80)+'px';
+    ref.style.height='auto';
+    ref.style.position='absolute';ref.style.top='8px';ref.style.right='-'+(Math.min(boardW*.22,80)+12)+'px';
+    area.style.width=(boardW+Math.min(boardW*.22,80)+16)+'px';
+
+    // Progress bar
+    document.getElementById('progress-bar').style.width=boardW+'px';
+    document.getElementById('progress-total').textContent=totalPieces;
+
+    puzzlePieces=[];correctCount=0;updateProgress();
+
+    // Create pieces
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const cv=document.createElement('canvas');
+        // Canvas needs extra space for tabs
+        const extra=tabSize+2;
+        cv.width=cellW+extra*2;cv.height=cellH+extra*2;
+        cv.className='puzzle-piece-cv';
+        cv.dataset.col=c;cv.dataset.row=r;
+        cv.dataset.correctX=Math.round(c*cellW-extra);
+        cv.dataset.correctY=Math.round(r*cellH-extra);
+        drawPiece(cv,r,c,extra);
+        board.appendChild(cv);
+        puzzlePieces.push(cv);
+      }
+    }
+    shufflePieces();
+    setupDrag();
+  };
+  puzzleImg.onerror=()=>{showToast('⚠️ 照片載入失敗');};
+  puzzleImg.src=CONFIG.puzzleImage;
+}
+
+function drawPiece(canvas,row,col,extra){
+  const ctx=canvas.getContext('2d');
+  const w=cellW,h=cellH,ts=tabSize;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  ctx.translate(extra,extra);
+  // Build jigsaw path
+  ctx.beginPath();
+  // Top edge
+  ctx.moveTo(0,0);
+  drawEdge(ctx,0,0,w,0,edgesH[row][col],'h');
+  // Right edge
+  drawEdge(ctx,w,0,w,h,edgesV[row][col+1],'v');
+  // Bottom edge (reversed)
+  drawEdge(ctx,w,h,0,h,-edgesH[row+1][col],'h');
+  // Left edge (reversed)
+  drawEdge(ctx,0,h,0,0,-edgesV[row][col],'v');
+  ctx.closePath();
+  ctx.clip();
+  // Draw image portion
+  const sx=col*puzzleImg.width/cols, sy=row*puzzleImg.height/rows;
+  const sw=puzzleImg.width/cols, sh=puzzleImg.height/rows;
+  ctx.drawImage(puzzleImg,sx,sy,sw,sh,-ts,- ts,w+ts*2,h+ts*2);
+  // Subtle border
+  ctx.strokeStyle='rgba(255,215,0,0.25)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.restore();
+}
+
+function drawEdge(ctx,x1,y1,x2,y2,type,dir){
+  if(type===0){ctx.lineTo(x2,y2);return;}
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  const ts=tabSize*type;
+  if(dir==='h'){
+    // horizontal edge, tab goes up/down
+    ctx.lineTo(mx-cellW*0.15,y1);
+    ctx.bezierCurveTo(mx-cellW*0.05,y1, mx-cellW*0.1,y1-ts*1.2, mx,y1-ts*1.2);
+    ctx.bezierCurveTo(mx+cellW*0.1,y1-ts*1.2, mx+cellW*0.05,y1, mx+cellW*0.15,y1);
+    ctx.lineTo(x2,y2);
+  }else{
+    // vertical edge, tab goes left/right
+    ctx.lineTo(x2,my-cellH*0.15);
+    ctx.bezierCurveTo(x1,my-cellH*0.05, x1-ts*1.2,my-cellH*0.1, x1-ts*1.2,my);
+    ctx.bezierCurveTo(x1-ts*1.2,my+cellH*0.1, x1,my+cellH*0.05, x1,my+cellH*0.15);
+    ctx.lineTo(x2,y2);
+  }
+}
+
+function shufflePieces(){
+  correctCount=0;
+  // Create array of all grid positions
+  const positions=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)positions.push({x:c*cellW,y:r*cellH});
+  // Fisher-Yates shuffle
+  for(let i=positions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[positions[i],positions[j]]=[positions[j],positions[i]];}
+  // Ensure no piece is in correct position
+  puzzlePieces.forEach((p,i)=>{
+    const extra=tabSize+2;
+    let pos=positions[i];
+    const cx=parseFloat(p.dataset.correctX)+extra;
+    const cy=parseFloat(p.dataset.correctY)+extra;
+    if(Math.abs(pos.x-cx)<2&&Math.abs(pos.y-cy)<2){
+      // Swap with next
+      const j=(i+1)%positions.length;
+      [positions[i],positions[j]]=[positions[j],positions[i]];
+      pos=positions[i];
+    }
+    p.style.left=(pos.x-extra)+'px';
+    p.style.top=(pos.y-extra)+'px';
+    p.classList.remove('correct');
+    p.style.pointerEvents='';
+    p.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
+  });
+  updateProgress();
+}
+
+function setupDrag(){
+  const board=document.getElementById('puzzle-board');
+  let dr=null,ox,oy;
+  function onS(e){
+    const t=e.target.closest('.puzzle-piece-cv');
+    if(!t||t.classList.contains('correct'))return;
+    dr=t;dr.style.zIndex=10;
+    const r=board.getBoundingClientRect();
+    const cx=e.touches?e.touches[0].clientX:e.clientX;
+    const cy=e.touches?e.touches[0].clientY:e.clientY;
+    ox=cx-r.left-parseFloat(dr.style.left);oy=cy-r.top-parseFloat(dr.style.top);
+    dr.style.filter='drop-shadow(0 0 12px rgba(255,215,0,.7))';
+    e.preventDefault();
+  }
+  function onM(e){
+    if(!dr)return;
+    const r=board.getBoundingClientRect();
+    const cx=e.touches?e.touches[0].clientX:e.clientX;
+    const cy=e.touches?e.touches[0].clientY:e.clientY;
+    dr.style.left=(cx-r.left-ox)+'px';
+    dr.style.top=(cy-r.top-oy)+'px';
+    e.preventDefault();
+  }
+  function onE(){
+    if(!dr)return;
+    const extra=tabSize+2;
+    // Snap to nearest grid
+    const curX=parseFloat(dr.style.left)+extra;
+    const curY=parseFloat(dr.style.top)+extra;
+    const snapC=Math.round(curX/cellW);
+    const snapR=Math.round(curY/cellH);
+    const sx=Math.max(0,Math.min(snapC,cols-1))*cellW-extra;
+    const sy=Math.max(0,Math.min(snapR,rows-1))*cellH-extra;
+    dr.style.left=sx+'px';dr.style.top=sy+'px';
+    dr.style.zIndex=1;
+    const corrX=parseFloat(dr.dataset.correctX);
+    const corrY=parseFloat(dr.dataset.correctY);
+    if(Math.abs(sx-corrX)<3&&Math.abs(sy-corrY)<3){
+      dr.style.left=corrX+'px';dr.style.top=corrY+'px';
+      dr.classList.add('correct');
+      dr.style.filter='none';
+      playCoinSound();correctCount++;updateProgress();
+      if(correctCount>=totalPieces)onPuzzleComplete();
+    }else{
+      dr.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
+    }
+    dr=null;
+  }
+  board.addEventListener('mousedown',onS);board.addEventListener('mousemove',onM);board.addEventListener('mouseup',onE);
+  board.addEventListener('touchstart',onS,{passive:false});board.addEventListener('touchmove',onM,{passive:false});board.addEventListener('touchend',onE);
+}
+
+function updateProgress(){document.getElementById('progress-count').textContent=correctCount;document.getElementById('progress-fill').style.width=(totalPieces?correctCount/totalPieces*100:0)+'%';}
 function onPuzzleComplete(){playWinSound();spawnCoins(15,1500);setTimeout(()=>{showScreen('scratch-screen');initScratchCard();},1500);}
-document.getElementById('btn-shuffle').addEventListener('click',()=>{const c=document.getElementById('puzzle-container'),s=CONFIG.puzzleSize;shufflePieces(c.offsetWidth,c.offsetWidth/s,c.offsetWidth/s,s);});
+document.getElementById('btn-shuffle').addEventListener('click',shufflePieces);
 
-// SCRATCH
+// ===== SCRATCH =====
 let scratchRevealed=false;
 function initScratchCard(){scratchRevealed=false;const w=document.getElementById('scratch-wrapper'),cv=document.getElementById('scratch-canvas'),ctx=cv.getContext('2d');cv.width=w.offsetWidth;cv.height=w.offsetHeight;cv.style.opacity='1';cv.style.transition='';
-const gr=ctx.createLinearGradient(0,0,cv.width,cv.height);gr.addColorStop(0,'#cc0000');gr.addColorStop(0.5,'#ee2222');gr.addColorStop(1,'#cc0000');ctx.fillStyle=gr;ctx.fillRect(0,0,cv.width,cv.height);ctx.strokeStyle='#ffd700';ctx.lineWidth=3;ctx.strokeRect(10,10,cv.width-20,cv.height-20);ctx.strokeRect(15,15,cv.width-30,cv.height-30);ctx.fillStyle='#ffd700';ctx.font=`bold ${Math.min(cv.width*0.08,28)}px "Noto Serif TC",serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎰 刮刮樂 🎰',cv.width/2,cv.height/2-15);ctx.font=`${Math.min(cv.width*0.05,18)}px "Noto Serif TC",serif`;ctx.fillText('用手指刮開此區',cv.width/2,cv.height/2+20);
+const gr=ctx.createLinearGradient(0,0,cv.width,cv.height);gr.addColorStop(0,'#cc0000');gr.addColorStop(.5,'#ee2222');gr.addColorStop(1,'#cc0000');ctx.fillStyle=gr;ctx.fillRect(0,0,cv.width,cv.height);
+ctx.strokeStyle='#ffd700';ctx.lineWidth=3;ctx.strokeRect(10,10,cv.width-20,cv.height-20);ctx.strokeRect(15,15,cv.width-30,cv.height-30);
+ctx.fillStyle='#ffd700';ctx.font=`bold ${Math.min(cv.width*.08,28)}px "Noto Serif TC",serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎰 刮刮樂 🎰',cv.width/2,cv.height/2-15);
+ctx.font=`${Math.min(cv.width*.05,18)}px "Noto Serif TC",serif`;ctx.fillText('用手指刮開此區',cv.width/2,cv.height/2+20);
 let isS=false,ls=0;
 function scratch(x,y){ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(x,y,25,0,Math.PI*2);ctx.fill();if(Date.now()-ls>80){playScratchSound();ls=Date.now();}checkScratch();}
 function gp(e){const r=cv.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*(cv.width/r.width),y:(cy-r.top)*(cv.height/r.height)};}
-cv.onmousedown=e=>{isS=true;const p=gp(e);scratch(p.x,p.y);};cv.onmousemove=e=>{if(isS){const p=gp(e);scratch(p.x,p.y);}};cv.onmouseup=()=>isS=false;cv.onmouseleave=()=>isS=false;
-cv.addEventListener('touchstart',e=>{isS=true;const p=gp(e);scratch(p.x,p.y);e.preventDefault();},{passive:false});cv.addEventListener('touchmove',e=>{if(isS){const p=gp(e);scratch(p.x,p.y);}e.preventDefault();},{passive:false});cv.addEventListener('touchend',()=>isS=false);}
+cv.onmousedown=e=>{isS=true;scratch(gp(e).x,gp(e).y);};cv.onmousemove=e=>{if(isS){const p=gp(e);scratch(p.x,p.y);}};cv.onmouseup=()=>isS=false;cv.onmouseleave=()=>isS=false;
+cv.addEventListener('touchstart',e=>{isS=true;scratch(gp(e).x,gp(e).y);e.preventDefault();},{passive:false});
+cv.addEventListener('touchmove',e=>{if(isS){const p=gp(e);scratch(p.x,p.y);}e.preventDefault();},{passive:false});
+cv.addEventListener('touchend',()=>isS=false);}
 
-function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity 0.5s';cv.style.opacity='0';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();showScreen('prize-screen');},CONFIG.prizeDelay);}}
+function checkScratch(){if(scratchRevealed)return;const cv=document.getElementById('scratch-canvas'),d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let t=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)t++;if(t/(d.length/4)>=CONFIG.scratchThreshold){scratchRevealed=true;cv.style.transition='opacity .5s';cv.style.opacity='0';setTimeout(()=>{playJackpotSound();spawnCoins(50,3000);fireMultipleFireworks();showScreen('prize-screen');},CONFIG.prizeDelay);}}
 
-// PRIZE
+// ===== PRIZE =====
 document.getElementById('btn-claim').addEventListener('click',async()=>{const code=CONFIG.giftCode;try{await navigator.clipboard.writeText(code);}catch{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}showToast('✅ 序號已複製！\n正在跳轉...');playCoinSound();spawnCoins(20,1500);const g=GIFT_TYPES[CONFIG.giftType]||GIFT_TYPES.ubereats;if(g.url)setTimeout(()=>{window.location.href=g.url;},1500);});
-
 document.getElementById('btn-make-own').addEventListener('click',()=>{window.location.href=location.origin+location.pathname;});
 
 init();
 </script>
 </body>
-</html> 
+</html>
