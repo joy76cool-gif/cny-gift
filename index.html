@@ -48,7 +48,8 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 .puzzle-board{position:relative;border:3px solid #ffd700;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,.2);background:rgba(0,0,0,.3);overflow:visible}
 .puzzle-piece-cv{position:absolute;cursor:pointer;z-index:1;transition:transform .15s}
 .puzzle-piece-cv.selected{z-index:5;transform:scale(1.08);filter:drop-shadow(0 0 15px rgba(255,215,0,.9))!important}
-.puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important;transform:none}
+.puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important;transform:none;outline:none}
+.puzzle-piece-cv.wrong{filter:drop-shadow(0 0 6px rgba(255,80,80,.8))}
 .puzzle-ref{border:2px solid #ffd700;border-radius:6px;opacity:.7;object-fit:contain;max-height:70px}
 .puzzle-progress{margin-top:8px;font-size:.85rem;color:#ffaaaa;white-space:nowrap}
 .puzzle-progress-bar{height:6px;background:#333;border-radius:3px;margin-top:6px;overflow:hidden}
@@ -117,8 +118,8 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       </select>
     </div>
     <div id="voucher-fields">
-      <div class="form-group"><label class="form-label">💰 金額</label><input type="text" class="form-input" id="amount-input" placeholder="例：$500"></div>
-      <div class="form-group"><label class="form-label">👤 你的名字</label><input type="text" class="form-input" id="sender-input" placeholder="例：Joy"></div>
+      <div class="form-group"><label class="form-label">💰 金額</label><input type="text" class="form-input" id="amount-input" placeholder="例：$888" value="$888"></div>
+      <div class="form-group"><label class="form-label">👤 你的名字</label><input type="text" class="form-input" id="sender-input" placeholder="例：Joy" value="Joy"></div>
     </div>
     <div id="code-field" style="display:none">
       <div class="form-group"><label class="form-label">🔑 序號 / 內容</label><input type="text" class="form-input" id="code-input" placeholder="禮物卡序號或自訂內容"></div>
@@ -128,7 +129,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
       <label class="form-file-label" id="voucher-label" style="padding:15px"><span id="voucher-label-text">📎 上傳自訂兌換券圖片</span></label>
       <input type="file" accept="image/*" class="form-file-input" id="voucher-input">
     </div>
-    <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="恭喜發財，JOY更發財" value="恭喜發財，JOY更發財"></div>
+    <div class="form-group"><label class="form-label">💬 祝福語</label><input type="text" class="form-input" id="greeting-input" placeholder="新年快樂，點蛇成金" value="新年快樂，點蛇成金，joy超發財"></div>
     <div class="form-group"><label class="form-label">🧩 拼圖難度</label>
       <select class="form-select" id="difficulty-select">
         <option value="4" selected>🟢 簡單</option><option value="5">🟡 中等</option><option value="6">🔴 困難</option>
@@ -202,7 +203,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 // ===== CONFIG =====
 const IMGBB_API_KEY='f3b38ce5bec9cb00a5ee4c5bf768ad2a';
 const GIFT_TYPES={linepay:{emoji:'💰',label:'恭喜獲得<br>新年紅包！🧧',btn:'💰 打開 LINE 領取紅包',url:'https://line.me/R/'},giftcard:{emoji:'🎫',label:'恭喜獲得<br>禮物卡！🎉',btn:'🎫 複製序號領取禮物卡',url:''},custom:{emoji:'🎁',label:'恭喜獲得<br>神秘禮物！',btn:'🎁 領取禮物',url:''}};
-let CONFIG={puzzleImage:'',giftCode:'',greeting:'恭喜發財，JOY更發財',giftType:'linepay',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000,amount:'',sender:'',voucherImg:''};
+let CONFIG={puzzleImage:'',giftCode:'',greeting:'新年快樂，點蛇成金，joy超發財',giftType:'linepay',puzzleSize:4,scratchThreshold:0.45,prizeDelay:2000,amount:'',sender:'',voucherImg:''};
 
 // ===== AUDIO =====
 let audioCtx=null;
@@ -260,7 +261,7 @@ async function uploadToImgBB(blob){
 }
 
 function buildUrl(imageUrl,code,greeting,type,size,amount,sender,voucherImg){const p=new URLSearchParams();p.set('p',imageUrl);if(code)p.set('c',code);p.set('g',greeting);p.set('t',type);p.set('s',size);if(amount)p.set('a',amount);if(sender)p.set('n',sender);if(voucherImg)p.set('v',voucherImg);return location.origin+location.pathname+'?'+p.toString();}
-function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'恭喜發財，JOY更發財',giftType:p.get('t')||'linepay',puzzleSize:parseInt(p.get('s'))||4,amount:p.get('a')||'',sender:p.get('n')||'',voucherImg:p.get('v')||''};}
+function readUrlParams(){const p=new URLSearchParams(location.search);if(!p.get('p'))return null;return{puzzleImage:p.get('p'),giftCode:p.get('c')||'',greeting:p.get('g')||'新年快樂，點蛇成金，joy超發財',giftType:p.get('t')||'linepay',puzzleSize:parseInt(p.get('s'))||4,amount:p.get('a')||'',sender:p.get('n')||'',voucherImg:p.get('v')||''};}
 
 // ===== CREATOR =====
 let selectedFile=null,selectedVoucherFile=null;
@@ -286,7 +287,7 @@ document.getElementById('btn-generate').addEventListener('click',async()=>{
   const code=document.getElementById('code-input')?.value.trim()||'';
   if(type==='linepay'&&!amount){showToast('⚠️ 請輸入金額');return;}
   if(type!=='linepay'&&!code){showToast('⚠️ 請輸入序號或內容');return;}
-  const greeting=document.getElementById('greeting-input').value.trim()||'恭喜發財，JOY更發財';
+  const greeting=document.getElementById('greeting-input').value.trim()||'新年快樂，點蛇成金，joy超發財';
   const size=parseInt(document.getElementById('difficulty-select').value);
   document.getElementById('loading-overlay').classList.add('show');
   try{
@@ -555,11 +556,11 @@ function jigsawEdge(ctx,x1,y1,x2,y2,type){
 
 function shufflePieces(){
   correctCount=0;
-  // Fisher-Yates shuffle on grid positions
   const allPos=[];
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)allPos.push({r,c});
+  // Fisher-Yates shuffle
   for(let i=allPos.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[allPos[i],allPos[j]]=[allPos[j],allPos[i]];}
-  // Ensure no piece is in its correct position
+  // Ensure no piece starts in correct position
   for(let i=0;i<allPos.length;i++){
     const origR=Math.floor(i/cols), origC=i%cols;
     if(allPos[i].r===origR && allPos[i].c===origC){
@@ -567,71 +568,67 @@ function shufflePieces(){
       [allPos[i],allPos[j]]=[allPos[j],allPos[i]];
     }
   }
-  // Assign positions
   for(let i=0;i<puzzlePieces.length;i++){
     piecePositions[i]=allPos[i];
     puzzleGrid[allPos[i].r][allPos[i].c]=i;
   }
   positionAllPieces();
-  // Clear selections and correct states
-  puzzlePieces.forEach(p=>{p.classList.remove('correct','selected');
-    p.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';});
+  // Reset all pieces to wrong state
+  puzzlePieces.forEach(p=>{
+    p.classList.remove('correct','selected','swap-anim');
+    p.classList.add('wrong');
+    p.style.filter='drop-shadow(0 0 6px rgba(255,80,80,.8))';
+  });
   selectedPiece=null;
+  isSwapping=false;
   updateProgress();
 }
 
 let selectedPiece=null;
+let swapSetup=false;
+let isSwapping=false;
 
 function setupSwap(){
+  if(swapSetup)return; // prevent duplicate listeners
+  swapSetup=true;
   const board=document.getElementById('puzzle-board');
 
   board.addEventListener('click',function(e){
+    if(isSwapping)return;
     const cv=e.target.closest('.puzzle-piece-cv');
     if(!cv||cv.classList.contains('correct'))return;
 
     if(!selectedPiece){
-      // First selection
       selectedPiece=cv;
       cv.classList.add('selected');
     } else if(selectedPiece===cv){
-      // Deselect
       cv.classList.remove('selected');
       selectedPiece=null;
     } else {
-      // Swap the two pieces!
+      isSwapping=true;
       const idx1=parseInt(selectedPiece.dataset.idx);
       const idx2=parseInt(cv.dataset.idx);
       const pos1={...piecePositions[idx1]};
       const pos2={...piecePositions[idx2]};
 
-      // Animate swap
       selectedPiece.classList.add('swap-anim');
       cv.classList.add('swap-anim');
 
-      // Update data
       piecePositions[idx1]=pos2;
       piecePositions[idx2]=pos1;
       puzzleGrid[pos1.r][pos1.c]=idx2;
       puzzleGrid[pos2.r][pos2.c]=idx1;
 
-      // Animate to new positions
       positionAllPieces();
-
       selectedPiece.classList.remove('selected');
       selectedPiece=null;
 
-      // After animation, check correctness
       setTimeout(()=>{
-        selectedPiece=null;
         puzzlePieces.forEach(p=>p.classList.remove('swap-anim'));
         checkAllCorrect();
+        isSwapping=false;
       },320);
     }
-  });
-
-  // Also support touch
-  board.addEventListener('touchend',function(e){
-    // click event handles it
   });
 }
 
@@ -644,15 +641,16 @@ function checkAllCorrect(){
     if(curPos.r===origR && curPos.c===origC){
       if(!cv.classList.contains('correct')){
         cv.classList.add('correct');
+        cv.classList.remove('wrong');
         cv.style.filter='none';
-        // Coin burst!
         const rect=cv.getBoundingClientRect();
         spawnCoinBurst(rect.left+rect.width/2,rect.top+rect.height/2);
       }
       correctCount++;
     } else {
       cv.classList.remove('correct');
-      cv.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
+      cv.classList.add('wrong');
+      cv.style.filter='drop-shadow(0 0 6px rgba(255,80,80,.8))';
     }
   });
   updateProgress();
