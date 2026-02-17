@@ -45,20 +45,17 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
 #puzzle-screen{padding:10px 15px}
 .puzzle-header{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.2rem,5vw,1.8rem);margin-bottom:8px;text-align:center}
 .puzzle-wrapper{position:relative;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:10px}
-.puzzle-area{position:relative;margin:0 auto}
 .puzzle-board{position:relative;border:3px solid #ffd700;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,.2);background:rgba(0,0,0,.3);overflow:visible}
-.puzzle-ghost{position:absolute;border:1px dashed rgba(255,215,0,.15);border-radius:2px}
-.puzzle-tray{position:relative;border:2px dashed rgba(255,215,0,.2);border-radius:12px;background:rgba(0,0,0,.2);padding:8px;overflow:visible;display:flex;flex-wrap:wrap;justify-content:center;gap:4px;min-height:60px}
-.puzzle-piece-cv{position:relative;cursor:grab;z-index:1;transition:filter .2s;flex-shrink:0}
-.puzzle-piece-cv.dragging{position:fixed;z-index:9999;cursor:grabbing}
-.puzzle-piece-cv.on-board{position:absolute}
-.puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important;position:absolute}
-.puzzle-ref{border:2px solid #ffd700;border-radius:6px;opacity:.7;object-fit:contain;max-height:60px}
+.puzzle-piece-cv{position:absolute;cursor:pointer;z-index:1;transition:transform .15s}
+.puzzle-piece-cv.selected{z-index:5;transform:scale(1.08);filter:drop-shadow(0 0 15px rgba(255,215,0,.9))!important}
+.puzzle-piece-cv.correct{cursor:default;z-index:0;filter:none!important;transform:none}
+.puzzle-ref{border:2px solid #ffd700;border-radius:6px;opacity:.7;object-fit:contain;max-height:70px}
 .puzzle-progress{margin-top:8px;font-size:.85rem;color:#ffaaaa}
 .puzzle-progress-bar{height:6px;background:#333;border-radius:3px;margin-top:6px;overflow:hidden}
 .puzzle-progress-fill{height:100%;background:linear-gradient(90deg,#ff4444,#ffd700);border-radius:3px;transition:width .3s;width:0%}
 .btn-shuffle{margin-top:12px;padding:10px 30px;background:linear-gradient(135deg,#cc0000,#aa0000);color:#ffd700;border:2px solid #ffd700;border-radius:30px;font-family:'Noto Serif TC',serif;font-size:1rem;cursor:pointer}
 .piece-burst{position:fixed;pointer-events:none;z-index:200}
+.swap-anim{transition:left .3s ease,top .3s ease}
 
 /* SCRATCH */
 .congrats-text{font-family:'ZCOOL KuaiLe',serif;font-size:clamp(1.5rem,7vw,2.5rem);text-shadow:0 0 30px rgba(255,215,0,.6);text-align:center;margin-bottom:8px;animation:glow 2s ease-in-out infinite alternate}
@@ -125,7 +122,7 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
     </div>
     <div class="form-group"><label class="form-label">🧩 拼圖難度</label>
       <select class="form-select" id="difficulty-select">
-        <option value="4" selected>簡單（4×4）</option><option value="5">中等（5×5）</option><option value="6">困難（6×6）</option>
+        <option value="4" selected>🟢 簡單</option><option value="5">🟡 中等</option><option value="6">🔴 困難</option>
       </select>
     </div>
     <button class="btn-generate" id="btn-generate">🧧 產生連結</button>
@@ -151,13 +148,11 @@ body{font-family:'Noto Serif TC',serif;background:#1a0a0a;color:#ffd700;overflow
   <div class="puzzle-header">🧩 拼出新年好運</div>
   <div class="puzzle-wrapper">
     <div style="display:flex;align-items:flex-start;gap:10px">
-      <div class="puzzle-area" id="puzzle-area">
-        <div class="puzzle-board" id="puzzle-board"></div>
-      </div>
+      <div class="puzzle-board" id="puzzle-board"></div>
       <img class="puzzle-ref" id="puzzle-ref" alt="參考圖">
     </div>
-    <div class="puzzle-tray" id="puzzle-tray"></div>
   </div>
+  <div class="puzzle-hint" style="margin-top:6px;font-size:.8rem;color:#cc8888;text-align:center">👆 點一片選中，再點另一片交換位置</div>
   <div class="puzzle-progress">已完成 <span id="progress-count">0</span> / <span id="progress-total">16</span> 片</div>
   <div class="puzzle-progress-bar" id="progress-bar"><div class="puzzle-progress-fill" id="progress-fill"></div></div>
   <button class="btn-shuffle" id="btn-shuffle">🔀 重新打亂</button>
@@ -292,8 +287,8 @@ document.getElementById('start-btn').addEventListener('click',()=>{playCoinSound
 // ===== PUZZLE ENGINE (auto-ratio, no overlap, jigsaw edges) =====
 let puzzlePieces=[],correctCount=0,totalPieces=0;
 let puzzleImg=null,cols=0,rows=0,cellW=0,cellH=0,boardW=0,boardH=0,tabSize=0;
-// Edge map: 1=tab out, -1=blank in, 0=flat (border)
 let edgesH=[],edgesV=[];
+let puzzleGrid=[],piecePositions=[];
 
 function loadAndInitPuzzle(){
   puzzleImg=new Image();
@@ -310,16 +305,16 @@ function loadAndInitPuzzle(){
     if(cols<2)cols=2;if(rows<2)rows=2;
     totalPieces=cols*rows;
 
-    // Board dimensions to fit screen
-    const maxW=Math.min(window.innerWidth*.88,420);
-    const maxH=Math.min(window.innerHeight*.55,420);
+    // Board dimensions to fit screen - BIGGER
+    const maxW=Math.min(window.innerWidth*.92,440);
+    const maxH=Math.min(window.innerHeight*.58,440);
     const imgRatio=puzzleImg.width/puzzleImg.height;
     if(maxW/maxH > imgRatio){boardH=maxH;boardW=boardH*imgRatio;}
     else{boardW=maxW;boardH=boardW/imgRatio;}
     boardW=Math.floor(boardW);boardH=Math.floor(boardH);
 
     cellW=boardW/cols;cellH=boardH/rows;
-    tabSize=Math.min(cellW,cellH)*0.18;
+    tabSize=Math.min(cellW,cellH)*0.2;
 
     // Generate edge map (random tabs/blanks)
     edgesH=[];edgesV=[];
@@ -331,24 +326,10 @@ function loadAndInitPuzzle(){
     board.style.width=boardW+'px';board.style.height=boardH+'px';
     board.innerHTML='';
 
-    const area=document.getElementById('puzzle-area');
-    area.style.width=boardW+'px';
-
     // Ref image
     const ref=document.getElementById('puzzle-ref');
     ref.src=CONFIG.puzzleImage;
     ref.style.width=Math.min(boardW*.25,90)+'px';
-
-    // Ghost grid (shows where pieces go)
-    for(let r=0;r<rows;r++){
-      for(let c=0;c<cols;c++){
-        const gh=document.createElement('div');
-        gh.className='puzzle-ghost';
-        gh.style.left=c*cellW+'px';gh.style.top=r*cellH+'px';
-        gh.style.width=cellW+'px';gh.style.height=cellH+'px';
-        board.appendChild(gh);
-      }
-    }
 
     // Progress bar
     document.getElementById('progress-bar').style.width=boardW+'px';
@@ -356,38 +337,49 @@ function loadAndInitPuzzle(){
 
     puzzlePieces=[];correctCount=0;updateProgress();
 
-    // Create pieces into tray
-    const tray=document.getElementById('puzzle-tray');
-    tray.innerHTML='';
-    tray.style.width=boardW+'px';
-
+    // Grid tracks which piece is at which position
+    // grid[r][c] = piece index; pieceAt[i] = {r,c}
+    puzzleGrid=[];piecePositions=[];
     const piecesArr=[];
+    let idx=0;
     for(let r=0;r<rows;r++){
+      puzzleGrid[r]=[];
       for(let c=0;c<cols;c++){
         const cv=document.createElement('canvas');
-        const extra=tabSize+2;
-        cv.width=cellW+extra*2;cv.height=cellH+extra*2;
+        const extra=Math.ceil(tabSize+2);
+        cv.width=Math.ceil(cellW+extra*2);cv.height=Math.ceil(cellH+extra*2);
         cv.className='puzzle-piece-cv';
         cv.dataset.col=c;cv.dataset.row=r;
-        cv.dataset.correctX=Math.round(c*cellW-extra);
-        cv.dataset.correctY=Math.round(r*cellH-extra);
-        cv.style.width=(cellW+extra*2)*.55+'px';
-        cv.style.height=(cellH+extra*2)*.55+'px';
+        cv.dataset.idx=idx;
         drawPiece(cv,r,c,extra);
+        cv.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
         piecesArr.push(cv);
+        puzzleGrid[r][c]=idx;
+        piecePositions[idx]={r,c};
+        idx++;
       }
     }
-    // Shuffle order in tray
-    for(let i=piecesArr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[piecesArr[i],piecesArr[j]]=[piecesArr[j],piecesArr[i]];}
-    piecesArr.forEach(cv=>{
-      cv.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
-      tray.appendChild(cv);
-      puzzlePieces.push(cv);
-    });
-    setupDrag();
+    puzzlePieces=piecesArr;
+
+    // Place all pieces at their current grid positions
+    piecesArr.forEach(cv=>{board.appendChild(cv);});
+    positionAllPieces();
+
+    // Shuffle
+    shufflePieces();
+    setupSwap();
   };
   puzzleImg.onerror=()=>{showToast('⚠️ 照片載入失敗');};
   puzzleImg.src=CONFIG.puzzleImage;
+}
+
+function positionAllPieces(){
+  const extra=Math.ceil(tabSize+2);
+  puzzlePieces.forEach((cv,i)=>{
+    const pos=piecePositions[i];
+    cv.style.left=(pos.c*cellW-extra)+'px';
+    cv.style.top=(pos.r*cellH-extra)+'px';
+  });
 }
 
 function drawPiece(canvas,row,col,extra){
@@ -439,119 +431,108 @@ function drawEdge(ctx,x1,y1,x2,y2,type,dir){
 
 function shufflePieces(){
   correctCount=0;
-  const tray=document.getElementById('puzzle-tray');
-  const arr=[...puzzlePieces];
-  // Fisher-Yates shuffle
-  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
-  arr.forEach(p=>{
-    p.classList.remove('correct','on-board','dragging');
-    p.style.position='relative';
-    p.style.left='';p.style.top='';
-    p.style.width=(cellW+tabSize*2+4)*.55+'px';
-    p.style.height=(cellH+tabSize*2+4)*.55+'px';
-    p.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
-    p.style.pointerEvents='';
-    tray.appendChild(p);
-  });
+  // Fisher-Yates shuffle on grid positions
+  const allPos=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)allPos.push({r,c});
+  for(let i=allPos.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[allPos[i],allPos[j]]=[allPos[j],allPos[i]];}
+  // Ensure no piece is in its correct position
+  for(let i=0;i<allPos.length;i++){
+    const origR=Math.floor(i/cols), origC=i%cols;
+    if(allPos[i].r===origR && allPos[i].c===origC){
+      const j=(i+1)%allPos.length;
+      [allPos[i],allPos[j]]=[allPos[j],allPos[i]];
+    }
+  }
+  // Assign positions
+  for(let i=0;i<puzzlePieces.length;i++){
+    piecePositions[i]=allPos[i];
+    puzzleGrid[allPos[i].r][allPos[i].c]=i;
+  }
+  positionAllPieces();
+  // Clear selections and correct states
+  puzzlePieces.forEach(p=>{p.classList.remove('correct','selected');
+    p.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';});
+  selectedPiece=null;
   updateProgress();
 }
 
-function setupDrag(){
+let selectedPiece=null;
+
+function setupSwap(){
   const board=document.getElementById('puzzle-board');
-  let dr=null,ox,oy,startInTray=false;
 
-  function getXY(e){return{x:e.touches?e.touches[0].clientX:e.clientX,y:e.touches?e.touches[0].clientY:e.clientY};}
+  board.addEventListener('click',function(e){
+    const cv=e.target.closest('.puzzle-piece-cv');
+    if(!cv||cv.classList.contains('correct'))return;
 
-  function onS(e){
-    const t=e.target.closest('.puzzle-piece-cv');
-    if(!t||t.classList.contains('correct'))return;
-    dr=t;
-    const pt=getXY(e);
-    const rect=dr.getBoundingClientRect();
-    ox=pt.x-rect.left;oy=pt.y-rect.top;
-    startInTray=!dr.classList.contains('on-board');
-
-    // Make it full size and fixed position for dragging
-    const extra=tabSize+2;
-    dr.style.width=(cellW+extra*2)+'px';
-    dr.style.height=(cellH+extra*2)+'px';
-    dr.classList.add('dragging');
-    dr.style.left=(pt.x-ox)+'px';
-    dr.style.top=(pt.y-oy)+'px';
-    dr.style.filter='drop-shadow(0 0 12px rgba(255,215,0,.7))';
-    document.body.appendChild(dr);
-    e.preventDefault();
-  }
-
-  function onM(e){
-    if(!dr)return;
-    const pt=getXY(e);
-    dr.style.left=(pt.x-ox)+'px';
-    dr.style.top=(pt.y-oy)+'px';
-    e.preventDefault();
-  }
-
-  function onE(e){
-    if(!dr)return;
-    dr.classList.remove('dragging');
-    const extra=tabSize+2;
-    const bRect=board.getBoundingClientRect();
-    const pRect=dr.getBoundingClientRect();
-    const cx=pRect.left+pRect.width/2;
-    const cy=pRect.top+pRect.height/2;
-
-    // Check if dropped on board
-    if(cx>=bRect.left && cx<=bRect.right && cy>=bRect.top && cy<=bRect.bottom){
-      // Snap to nearest grid cell
-      const relX=cx-bRect.left;
-      const relY=cy-bRect.top;
-      const snapC=Math.round(relX/cellW-.5);
-      const snapR=Math.round(relY/cellH-.5);
-      const sc=Math.max(0,Math.min(snapC,cols-1));
-      const sr=Math.max(0,Math.min(snapR,rows-1));
-
-      const corrC=parseInt(dr.dataset.col);
-      const corrR=parseInt(dr.dataset.row);
-
-      if(sc===corrC && sr===corrR){
-        // CORRECT!
-        dr.classList.add('correct','on-board');
-        dr.style.position='absolute';
-        dr.style.left=dr.dataset.correctX+'px';
-        dr.style.top=dr.dataset.correctY+'px';
-        dr.style.width=(cellW+extra*2)+'px';
-        dr.style.height=(cellH+extra*2)+'px';
-        dr.style.filter='none';
-        board.appendChild(dr);
-        correctCount++;updateProgress();
-        // Coin burst at piece location!
-        const pieceRect=dr.getBoundingClientRect();
-        spawnCoinBurst(pieceRect.left+pieceRect.width/2, pieceRect.top+pieceRect.height/2);
-        if(correctCount>=totalPieces)onPuzzleComplete();
-      } else {
-        // Wrong spot - return to tray
-        returnToTray(dr);
-      }
+    if(!selectedPiece){
+      // First selection
+      selectedPiece=cv;
+      cv.classList.add('selected');
+    } else if(selectedPiece===cv){
+      // Deselect
+      cv.classList.remove('selected');
+      selectedPiece=null;
     } else {
-      // Dropped outside board - return to tray
-      returnToTray(dr);
+      // Swap the two pieces!
+      const idx1=parseInt(selectedPiece.dataset.idx);
+      const idx2=parseInt(cv.dataset.idx);
+      const pos1={...piecePositions[idx1]};
+      const pos2={...piecePositions[idx2]};
+
+      // Animate swap
+      selectedPiece.classList.add('swap-anim');
+      cv.classList.add('swap-anim');
+
+      // Update data
+      piecePositions[idx1]=pos2;
+      piecePositions[idx2]=pos1;
+      puzzleGrid[pos1.r][pos1.c]=idx2;
+      puzzleGrid[pos2.r][pos2.c]=idx1;
+
+      // Animate to new positions
+      positionAllPieces();
+
+      selectedPiece.classList.remove('selected');
+      selectedPiece=null;
+
+      // After animation, check correctness
+      setTimeout(()=>{
+        selectedPiece=null;
+        puzzlePieces.forEach(p=>p.classList.remove('swap-anim'));
+        checkAllCorrect();
+      },320);
     }
-    dr=null;
-  }
+  });
 
-  function returnToTray(piece){
-    if(piece.classList.contains('on-board'))piece.classList.remove('on-board');
-    piece.style.position='relative';
-    piece.style.left='';piece.style.top='';
-    const extra=tabSize+2;
-    piece.style.width=(cellW+extra*2)*.55+'px';
-    piece.style.height=(cellH+extra*2)*.55+'px';
-    piece.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
-    document.getElementById('puzzle-tray').appendChild(piece);
-  }
+  // Also support touch
+  board.addEventListener('touchend',function(e){
+    // click event handles it
+  });
+}
 
-  document.addEventListener('mousedown',onS);document.addEventListener('mousemove',onM);document.addEventListener('mouseup',onE);
-  document.addEventListener('touchstart',onS,{passive:false});document.addEventListener('touchmove',onM,{passive:false});document.addEventListener('touchend',onE);
+function checkAllCorrect(){
+  correctCount=0;
+  puzzlePieces.forEach((cv,i)=>{
+    const origR=parseInt(cv.dataset.row);
+    const origC=parseInt(cv.dataset.col);
+    const curPos=piecePositions[i];
+    if(curPos.r===origR && curPos.c===origC){
+      if(!cv.classList.contains('correct')){
+        cv.classList.add('correct');
+        cv.style.filter='none';
+        // Coin burst!
+        const rect=cv.getBoundingClientRect();
+        spawnCoinBurst(rect.left+rect.width/2,rect.top+rect.height/2);
+      }
+      correctCount++;
+    } else {
+      cv.classList.remove('correct');
+      cv.style.filter='drop-shadow(2px 2px 3px rgba(0,0,0,.7))';
+    }
+  });
+  updateProgress();
+  if(correctCount>=totalPieces)onPuzzleComplete();
 }
 
 function updateProgress(){document.getElementById('progress-count').textContent=correctCount;document.getElementById('progress-fill').style.width=(totalPieces?correctCount/totalPieces*100:0)+'%';}
